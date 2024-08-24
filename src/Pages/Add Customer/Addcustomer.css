@@ -1,0 +1,64 @@
+.add_customer-section {
+    width: 100%;
+    min-height: 100vh;
+    background-color: rgb(148, 242, 148);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add_customer_sub_section {
+    width: 70%;
+    min-height: 110vh;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.add_new-cutomer_heading {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.add_customer_form_section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.add_customer_form_sub_section {
+    width: 80%;
+    height: 70vh;
+}
+
+.add_customer_input_section {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    row-gap: 20px;
+    margin-bottom: 1rem;
+}
+
+#add_customer_input {
+    width: 300px;
+    height: 35px;
+    border-radius: 5px;
+    border: 1px solid rgb(156, 153, 153);
+    outline: none;
+    padding-left: 10px;
+    box-shadow: 1px 1px 2px 1px rgb(196, 195, 195);
+}
+
+#add_customer_input:focus {
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    padding: 3px 0px 3px 3px;
+    margin: 1px 1px 1px 0px;
+    border: 1px solid rgba(81, 203, 238, 1);
+}
+
+.add_customer_labels {
+    font-size: 14px;
+    font-weight: 500;
+}

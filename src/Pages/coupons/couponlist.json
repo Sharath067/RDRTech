@@ -1,0 +1,15 @@
+[
+    {
+      "id": 1,
+      "code": "DISCOUNT10",
+      "description": "10% off on all items",
+      "expirationDate": "2024-12-31"
+    },
+    {
+      "id": 2,
+      "code": "FREESHIP",
+      "description": "Free shipping on orders over $50",
+      "expirationDate": "2024-06-30"
+    }
+  ]
+  

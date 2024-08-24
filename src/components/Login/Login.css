@@ -1,0 +1,307 @@
+.main-div {
+    margin: 0px;
+    background-image: url('../../Assets/Images/PartnerBG.webp');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sub-section {
+    width: 90%;
+    background: linear-gradient(#83F1AB, #78E3C6, #71D8DE);
+    height: 90vh;
+    display: flex;
+    border-radius: 30px;
+}
+
+.login-content {
+    width: 50%;
+    background: linear-gradient(#83F1AB, #78E3C6, #71D8DE);
+    position: relative;
+    border-radius: 30px 0px 0px 30px;
+}
+
+.side-box, .sidebox-2, .side-box-3, .sidebox-4 {
+    position: absolute;
+    background: rgb(161, 244, 190);
+}
+
+.side-box {
+    width: 200px;
+    height: 200px;
+    top: 0px;
+    left: 0px;
+    border-radius: 30px 0px 50px 0px;
+}
+
+.sidebox-2 {
+    width: 150px;
+    height: 200px;
+    top: 100px;
+    left: 0px;
+    background: #B4F3D6;
+    border-radius: 0px 50px 50px 0px;
+}
+
+.side-box-3 {
+    width: 150px;
+    height: 250px;
+    bottom: 40px;
+    right: 0px;
+    border-radius: 50px 0px 0px 50px;
+}
+
+.sidebox-4 {
+    width: 200px;
+    height: 180px;
+    bottom: 0px;
+    right: 40px;
+    background: #92E1E9;
+    border-radius: 50px 50px 0px 0px;
+}
+
+.logo-section {
+    position: absolute;
+    top: 30%;
+    left: 40%;
+    background:none;
+    z-index: 9;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-section h2 {
+    color: #ffffff;
+}
+
+.login-section {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-subsection {
+    color: black;
+    border-radius: 20px;
+    width: 380px;
+    height: 70vh;
+    background: #F3F4F9;
+    box-shadow: 2px 2px 0px 0px rgb(223, 221, 221);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#input-section-email, #input-section-password {
+    width: 250px;
+    height: 40px;
+    margin: 10px 0;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding-left: 20px;
+    outline: none;
+    background-color: #FEFEFF;
+    box-shadow: 2px 2px 2px 2px rgb(223, 221, 221);
+}
+
+.button-submit {
+    width: 96.3%;
+    height: 40px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #FE6B68;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.signUp {
+    margin-left: 5px;
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 16px;
+    margin-top: 10px;
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.join {
+    font-weight: 600;
+    color: rgb(10, 102, 194);
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.sub {
+    margin-top: 5px;
+    align-items: center;
+    margin-left: 35px;
+}
+
+.error-message {
+    color: red;
+    min-height: 10px; 
+    display: block;
+    width: 250px; 
+    text-align: left; 
+    font-size: 14px; 
+}
+
+
+@media (max-width: 1200px) {
+    .sub-section {
+        height: 80vh;
+    }
+
+    .login-content {
+        width: 45%;
+    }
+}
+
+@media (max-width: 992px) {
+    .login-content{
+        width: 100%;
+    }
+    .login-section{
+        margin-right: 30px;
+    }
+    .login-subsection{
+        border-radius: 20px 20px 20px 20px;;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .side-box-3,.sidebox-4,.sidebox-2,.side-box{
+        display: none;
+    }
+    .logo-section {
+        display: flex; 
+        justify-content: center;
+        align-items: center;
+        margin-top:-100px;
+        margin-left: -50px;
+    }
+
+    .sub-section {
+        flex-direction: row; 
+        justify-content: center;
+        align-items: center;
+        height: 80vh; 
+        border-radius: 30px; 
+    }
+
+    .login-content {
+        width: 100%; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(#83F1AB, #78E3C6, #71D8DE);
+        border-radius: 30px 0px 0px 30px;
+    }
+
+    .login-section {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .login-subsection {
+        width: 100%; 
+        height: auto;
+        padding: 20px;
+        box-shadow: none;
+        border-radius: 20px; 
+    }
+
+    #input-section-email, #input-section-password {
+        width: 100%;
+    }
+
+    .button-submit {
+        width: 100%;
+    }
+}
+
+@media (max-width: 500px){
+    .logo-section{
+        display: none;
+    }
+    .main-div {
+        width: 100%;
+    }
+    .login-section{
+        margin-left: 30px;
+    }
+    .sub-section {
+        flex-direction: column;
+        align-items: center;
+    }
+    .login-subsection {
+        width: 100%;
+        margin: 10px;
+    }
+    #input-section-email, #input-section-password {
+        width: 90%;
+    }
+    .button-submit {
+        width: 90%;
+    }
+}
+
+
+@media (max-width: 420px) {
+    .main-div {
+        width: 100%;
+    }
+    .sub-section {
+        flex-direction: column;
+        align-items: center;
+    }
+    .login-subsection {
+        width: 100%;
+        margin: 10px;
+    }
+    form{
+        margin-left: 25px;
+    }
+    .sub{
+        margin-left: 5px;
+    }
+    #input-section-email, #input-section-password {
+        width: 90%;
+    }
+    .button-submit {
+        width: 90%;
+    }
+}
+
+@media (max-width: 320px) {
+    .main-div {
+        width: 100%;
+    }
+    .sub-section {
+        flex-direction: column;
+        align-items: center;
+    }
+    .login-subsection {
+        width: 100%;
+        margin: 10px;
+    }
+    #input-section-email, #input-section-password {
+        width: 90%;
+    }
+    .button-submit {
+        width: 90%;
+    }
+}

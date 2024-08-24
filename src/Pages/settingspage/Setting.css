@@ -1,0 +1,258 @@
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background-color: #f9f9f9;
+}
+
+.settings-container h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+.settings-container p {
+  color: #555;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+details {
+  margin-bottom: 30px;
+  width: 100%;
+  max-width: 800px;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 15px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+details:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+summary {
+  font-weight: 600;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #333;
+}
+
+summary .icon {
+  margin-right: 10px;
+  font-size: 22px;
+}
+
+.faq, .privacy-policy, .contact-us {
+  padding-top: 15px;
+  padding-left: 10px;
+}
+
+.faq p, .privacy-policy p, .contact-us p {
+  color: #666;
+  margin-left: 20px;
+  font-size: 16px;
+  margin-top: 10px;
+  line-height: 1.6;
+}
+
+.faq-section summary {
+  color: #007BFF;
+}
+
+.privacy-policy-section summary {
+  color: #28A745;
+}
+
+.contact-us-section summary {
+  color: #FFC107;
+}
+
+@media (max-width: 768px) {
+  .settings-container {
+    padding: 20px;
+  }
+
+  details {
+    padding: 10px 15px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  summary {
+    font-size: 18px;
+  }
+
+  .faq p, .privacy-policy p, .contact-us p {
+    font-size: 14px;
+    margin-left: 10px;
+  }
+}
+
+.add-item-form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background-color: #fff;
+  border: 1px solid #ddd; 
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  transition: transform 0.3s ease-in-out;
+}
+
+.add-item-form.show {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.btn-close-1 {
+  position: absolute;
+  top: 27px;
+  right: 15px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  color: #555;
+  background: none;
+  border: none;
+}
+
+.addnew-button-container {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.add-item-form h3 {
+  margin-top: 0;
+}
+
+.add-item-form div {
+  margin-bottom: 10px;
+}
+
+.add-item-form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.add-item-form input,
+.add-item-form select,
+.add-item-form textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.add-item-form button {
+  margin-right: 10px;
+  padding: 10px;
+  height: 40px;
+  border: none;
+  border-radius: 4px;
+  background-color: #00C851;
+  color: white;
+  cursor: pointer;
+}
+
+.add-item-form button:hover {
+  background-color: #03b149;
+}
+
+.addnew-button{
+  background-color: #00C851;
+    width: 130px;
+    border: none;
+    padding: 5px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    height: 40px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+    margin-top: -10px;
+    margin-left: 1000px;
+}
+
+.addnew-button:hover{
+  transform: scale(1.05);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  /* backdrop-filter: blur(1px); */
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.icon-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: -15px;
+}
+
+.edit-icon,
+.delete-icon {
+  font-size: 1.2em; 
+  width: 40px; 
+  height: 40px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s; 
+  cursor: pointer;
+
+}
+
+.edit-icon {
+  color: #007bff; 
+}
+
+.delete-icon {
+  color: #dc3545; 
+}
+
+.edit-icon:hover {
+  background-color: #007bff; 
+  color: white; 
+  transform: scale(1.1);
+}
+
+.delete-icon:hover {
+  background-color: #dc3545; 
+  color: white; 
+  transform: scale(1.1);
+}
+
+.addNew-button-1{
+  background-color: #00C851;
+  color: white;
+  border: none;
+  width: 100px; 
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}

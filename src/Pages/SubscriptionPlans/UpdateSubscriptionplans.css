@@ -1,0 +1,170 @@
+.header {
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.create-container{
+    background-color: #f9f9f9;
+}
+
+.create-sub-container{
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    height: 100%;           
+    background-color: #f9f9f9;
+    padding: 20px;           
+    box-sizing: border-box; 
+    margin-top: -3%;
+}
+
+.create-plan-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 70%;
+    margin: 20px;
+    text-align: center;
+}
+
+
+
+.create-plan-container h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.create-plan-container p {
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.create-plan-form {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    padding-left: 25px;
+}
+
+.create-plan-form label {
+    margin-bottom: 5px;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+}
+
+.create-plan-form input {
+    width: 100%;
+    padding: 7px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.create-plan-form select {
+    width: 100%;
+    padding: 7px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+    height: 38px; 
+    background-color: #fff;
+    color: #666; 
+    font-size: 14px; 
+}
+
+.create-plan-form select:focus {
+    border-color: #28a745;
+    outline: none;
+}
+
+.create-plan-form input:focus {
+    border-color: #28a745;
+    outline: none;
+}
+
+.form-buttons {
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+}
+
+.back-arrow-1,
+.create-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.create-button {
+    background-color: #28a745;
+    color: white;
+    height: 40px;
+    transition: background-color 0.3s;
+}
+
+.create-button:hover {
+    background-color: #218838;
+}
+
+.form-message {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #d9534f;
+}
+
+.error {
+    color: red;
+    font-size: 14px; 
+    margin-top: 5px;
+}
+
+.left-aligned-error {
+    display: block;
+    text-align: left;
+    margin-left: 0;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.arrowLeft {
+    padding-left: 23px;
+    padding-top: 25px;
+    color: black;
+}
+
+.arrowLeft:hover{
+    cursor: pointer;
+}
+
+
+@media (max-width: 600px) {
+    .create-plan-form input {
+        margin-bottom: 15px;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .back-arrow-1 {
+        left: 20px;
+        top: 20px;
+    }
+}

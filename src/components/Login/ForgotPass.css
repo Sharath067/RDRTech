@@ -1,0 +1,118 @@
+.forgot-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  position: relative;
+  background-color: #f9f9f9;
+}
+
+.back-arrow {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  cursor: pointer;
+}
+
+.fa-arrow-left{
+  font-size:20px;
+  margin-top: 15px;
+}
+
+.custom-forgot-password-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius:10px;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+} 
+
+.custom-forgot-password-form {
+  display: flex;
+  flex-direction: column;
+}
+.custom-forgot-password-title h6{
+  margin-top: 10px;
+}
+
+.custom-forgot-password-title {
+  margin-bottom: 10px;
+  margin-left: 70px;
+}
+
+.custom-forgot-password-group {
+  margin-top: 10px;
+}
+
+.custom-forgot-password-input {
+  padding: 7px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.custom-forgot-password-button {
+  padding: 7px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  height: 45px;
+  margin-top: 15px;
+}
+
+.custom-forgot-password-button:hover {
+  background-color: #0056b3;
+  height: 45px;
+}
+
+/* Modal Styles */
+/* .modal-content {
+  background: white;
+  color: rgb(9, 102, 9);
+  padding: 10px;
+  border-radius: 10px;
+  width: 280px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.modal-content h2 {
+  margin: 10px 0;
+}
+
+.modal-content p {
+  margin-bottom: 20px;
+}
+
+.modal-content button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  width: 50%;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 65px;
+}
+
+.modal-content button:hover {
+  background-color: #0056b3;
+}
+
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ */
