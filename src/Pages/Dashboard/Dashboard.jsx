@@ -56,12 +56,11 @@ const Dashboard = () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
         setWindowWidth(window.innerWidth);
-      }, 300); // Adjust the delay (in milliseconds) as needed
+      }, 300);
     };
 
     window.addEventListener("resize", handleResize);
 
-    // Cleanup event listener on component unmount
     return () => {
       window.removeEventListener("resize", handleResize);
       clearTimeout(resizeTimeout);

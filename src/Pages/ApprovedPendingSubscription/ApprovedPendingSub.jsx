@@ -291,7 +291,7 @@ const PendingUsers = () => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        "http://localhost:8080/api/emial/send/notifyAllByEmail",
+        "http://54.152.49.191:8080/api/email/notifyAllSubscriptionPendingUsers",
         {
           method: "POST",
           headers: {
