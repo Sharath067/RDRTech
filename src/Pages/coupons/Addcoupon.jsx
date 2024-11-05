@@ -4,12 +4,12 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import couponService from "./coupon.service";
-import { useAuth } from "../AuthContexts/AuthContext";
+// import { useAuth } from "../AuthContexts/AuthContext";
 import { NavLink } from "react-router-dom";
 import "./Addcoupon.css";
 
 const AddCoupon = ({ onAddCoupon }) => {
-  const { token } = useAuth();
+  // const { token } = useAuth();
   const [formData, setFormData] = useState({
     code: "",
     description: "",
@@ -19,6 +19,8 @@ const AddCoupon = ({ onAddCoupon }) => {
   });
   const [errors, setErrors] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const token = localStorage.getItem('jwtToken');
 
   const validateField = (name, value) => {
     switch (name) {

@@ -89,6 +89,20 @@
   position: relative;
 }
 
+.status-renewal {
+  display: inline-flex;
+  align-items: center;
+  background-color: transparent;
+  color: #da0303;
+  padding: 5px 15px;
+  border-radius: 20px;
+  text-align: center;
+  border: 2px solid #da0303;
+  font-weight: bold;
+  font-size: 14px;
+  position: relative;
+}
+
 .table_body img {
   transition: transform 0.3s ease-in-out; 
 }
@@ -174,13 +188,13 @@
 }
 
 .slno {
-  width: 4%;
+  width: 8%;
   text-align: left;
   word-wrap: break-word;
 }
 
 .name {
-  width: 13%; 
+  width: 10%; 
   text-align: left;
   word-wrap: break-word;
 }
@@ -235,7 +249,7 @@
 
 
 .table_body table {
-  width: 90%;
+  width: 95%;
   margin: 0 auto;
   align-items: center;
   overflow-x: auto;

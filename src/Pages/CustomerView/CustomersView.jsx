@@ -583,10 +583,10 @@ import "./CustomersView.css";
 import Header from "../../components/Header/Header";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../AuthContexts/AuthContext";
+// import { useAuth } from "../AuthContexts/AuthContext";
 
 const CustomersView = () => {
-  const { token } = useAuth();
+  // const { token } = useAuth();
   const { id } = useParams();
   const [professional, setProfessional] = useState(null);
   const [gstDownloaded, setGstDownloaded] = useState(false);
@@ -595,6 +595,7 @@ const CustomersView = () => {
   const [rejectReason, setRejectReason] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const token = localStorage.getItem('jwtToken');
 
   useEffect(() => {
     const fetchProfessionalData = async () => {

@@ -163,25 +163,25 @@
 }
 
 .slno-1 {
-  width: 4%;
+  width: 8%;
   text-align: left;
   word-wrap: break-word;
 }
 
 .name-1 {
-  width: 13%; 
+  width: 14%; 
   text-align: left;
   word-wrap: break-word;
 }
 
 .email-1 {
-  width: 25%; 
+  width: 24%; 
   text-align: left;
   word-wrap: break-word;
 }
 
 .phone-1 {
-  width: 7%;
+  width: 8%;
   text-align: left;
   word-wrap: break-word;
 }
@@ -288,6 +288,13 @@
   border-color: #3e4c59;
 }
 
+.nav-link img {
+  transition: transform 0.3s ease; 
+}
+
+.nav-link img:hover {
+  transform: scale(1.2); 
+}
 
 @media (max-width: 1200px) {
   .table-list-section {

@@ -1,52 +1,42 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "./Table.css";
-import { FaSearch } from "react-icons/fa";
-import { NavLink, useNavigate } from "react-router-dom";
-import approveImage from "../../Assets/Images/verified.png";
-import allmemberImage from "../../Assets/Images/group-of-men.png";
-import pendingImage from "../../Assets/Images/wait.png";
-import subscriptionImage from "../../Assets/Images/subscription (2).png";
-import viewData from "../../Assets/Images/eye-scanner.png";
-import { useAuth } from "../AuthContexts/AuthContext";
+import React, {useState, useEffect} from 'react';
+import './Table.css';
+import {FaSearch} from 'react-icons/fa';
+import {NavLink, useNavigate} from 'react-router-dom';
+import approveImage from '../../Assets/Images/verified.png';
+import allmemberImage from '../../Assets/Images/group-of-men.png';
+import pendingImage from '../../Assets/Images/wait.png';
+import subscriptionImage from '../../Assets/Images/subscription (2).png';
+import viewData from '../../Assets/Images/eye-scanner.png';
+import {fetchProfessionals} from '../apiServices/apiServices';
 
 const Table = () => {
-  const { token } = useAuth();
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const [searchItem, setSearchItem] = useState("");
+  const [searchItem, setSearchItem] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterStatus, setFilterStatus] = useState("all");
+  const [filterStatus, setFilterStatus] = useState('all');
   const [error, setError] = useState(null);
-  const [activeButton, setActiveButton] = useState("all");
+  const [activeButton, setActiveButton] = useState('all');
   const [showButtons, setShowButtons] = useState(false);
   const itemsPerPage = 5;
 
   useEffect(() => {
+    const token = localStorage.getItem('jwtToken');
     const getData = async () => {
-      if (token) {
-        try {
-          const res = await axios.get(
-            `http://54.152.49.191:8080/admin/professionals`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setData(res.data);
-        } catch (err) {
-          console.error(err);
-          setError("Failed to fetch data");
-        }
+      try {
+        const fetchedData = await fetchProfessionals(token);
+        setData(fetchedData);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to fetch data');
       }
     };
     getData();
-  }, [token]);
+  }, []);
 
-  const filterData = data.filter((item) => {
+  const filterData = data.filter(item => {
     if (
-      filterStatus === "all" ||
+      filterStatus === 'all' ||
       (item.accountStatus &&
         item.accountStatus.toLowerCase() === filterStatus.toLowerCase())
     ) {
@@ -58,11 +48,15 @@ const Table = () => {
         (item.phoneNumber &&
           item.phoneNumber.toLowerCase().includes(searchItem.toLowerCase())) ||
         (item.companyName &&
-          item.companyName.toLowerCase().includes(searchItem.toLowerCase()))
+          item.companyName.toLowerCase().includes(searchItem.toLowerCase())) ||
+        (item.referenceNumber &&
+          item.referenceNumber.toString().includes(searchItem))
       );
     }
     return false;
   });
+
+  console.log(error);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -70,32 +64,32 @@ const Table = () => {
 
   const totalPages = Math.ceil(filterData.length / itemsPerPage);
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = newPage => {
     if (newPage > 0 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = e => {
     setSearchItem(e.target.value);
     setCurrentPage(1);
   };
 
-  const handleFilterChange = (status) => {
+  const handleFilterChange = status => {
     setFilterStatus(status);
     setCurrentPage(1);
   };
 
-  const getStatusClass = (status) => {
+  const getStatusClass = status => {
     switch (status.toLowerCase()) {
-      case "approved":
-        return "status-approved";
-      case "pending":
-        return "status-pending";
-      case "inactive":
-        return "status-inactive";
+      case 'approved':
+        return 'status-approved';
+      case 'pending':
+        return 'status-pending';
+      case 'renewal':
+        return 'status-renewal';
       default:
-        return "";
+        return '';
     }
   };
 
@@ -106,10 +100,9 @@ const Table = () => {
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`page-number ${currentPage === i ? "active" : ""}`}
-        >
+          className={`page-number ${currentPage === i ? 'active' : ''}`}>
           {i}
-        </button>
+        </button>,
       );
     }
     return pages;
@@ -123,8 +116,7 @@ const Table = () => {
             <i
               className="fa fa-arrow-left fa-1x"
               aria-hidden="true"
-              onClick={() => navigate(-1)}
-            ></i>
+              onClick={() => navigate(-1)}></i>
           </span>
           <h4 className="heading-name"> Admin Customer's List</h4>
         </div>
@@ -133,18 +125,16 @@ const Table = () => {
         <div className="table-list-section">
           <div
             className={`table-items-section ${
-              showButtons ? "show-buttons" : ""
-            }`}
-          >
+              showButtons ? 'show-buttons' : ''
+            }`}>
             <button
               className={`buttons-for-tables ${
-                activeButton === "all" ? "active" : ""
+                activeButton === 'all' ? 'active' : ''
               }`}
               onClick={() => {
-                handleFilterChange("all");
-                setActiveButton("all");
-              }}
-            >
+                handleFilterChange('all');
+                setActiveButton('all');
+              }}>
               <img
                 src={allmemberImage}
                 alt="approve"
@@ -155,13 +145,12 @@ const Table = () => {
             </button>
             <button
               className={`buttons-for-tables ${
-                activeButton === "approved" ? "active" : ""
+                activeButton === 'approved' ? 'active' : ''
               }`}
               onClick={() => {
-                handleFilterChange("approved");
-                setActiveButton("approved");
-              }}
-            >
+                handleFilterChange('approved');
+                setActiveButton('approved');
+              }}>
               <img
                 src={approveImage}
                 alt="approve"
@@ -172,13 +161,12 @@ const Table = () => {
             </button>
             <button
               className={`buttons-for-tables ${
-                activeButton === "pending" ? "active" : ""
+                activeButton === 'pending' ? 'active' : ''
               }`}
               onClick={() => {
-                handleFilterChange("pending");
-                setActiveButton("pending");
-              }}
-            >
+                handleFilterChange('pending');
+                setActiveButton('pending');
+              }}>
               <img
                 src={pendingImage}
                 alt="approve"
@@ -189,13 +177,12 @@ const Table = () => {
             </button>
             <button
               className={`buttons-for-tables ${
-                activeButton === "inactive" ? "active" : ""
+                activeButton === 'renewal' ? 'active' : ''
               }`}
               onClick={() => {
-                handleFilterChange("inactive");
-                setActiveButton("inactive");
-              }}
-            >
+                handleFilterChange('renewal');
+                setActiveButton('renewal');
+              }}>
               <img
                 src={subscriptionImage}
                 alt="approve"
@@ -208,8 +195,7 @@ const Table = () => {
             {/* Vertical Ellipsis */}
             <div
               className="ellipsis-menu"
-              onClick={() => setShowButtons(!showButtons)}
-            >
+              onClick={() => setShowButtons(!showButtons)}>
               ⋮
             </div>
           </div>
@@ -230,7 +216,7 @@ const Table = () => {
             <table>
               <thead>
                 <tr>
-                  <th className="slno">ID</th>
+                  <th className="slno">Reference No</th>
                   <th className="name">Name</th>
                   <th className="email">Email</th>
                   <th className="phone">Phone</th>
@@ -241,27 +227,26 @@ const Table = () => {
               </thead>
               <tbody>
                 {currentItems.map((item, index) => {
-                  const serialNumber = startIndex + index + 1;
+                  const referenceNumber = startIndex + index + 1;
                   return (
                     <tr key={index}>
-                      <td>{serialNumber}</td>
-                      <td>{item.professionalName || "N/A"}</td>
-                      <td>{item.emailId || "N/A"}</td>
-                      <td>{item.phoneNumber || "N/A"}</td>
-                      <td>{item.companyName || "N/A"}</td>
+                      <td>{item.referenceNumber}</td>
+                      <td>{item.professionalName || 'N/A'}</td>
+                      <td>{item.emailId || 'N/A'}</td>
+                      <td>{item.phoneNumber || 'N/A'}</td>
+                      <td>{item.companyName || 'N/A'}</td>
                       <td>
                         <span className={getStatusClass(item.accountStatus)}>
-                          {item.accountStatus || "N/A"}
+                          {item.accountStatus || 'N/A'}
                         </span>
                       </td>
                       <td>
                         <NavLink
-                          to={`viewcustomer/${item.professionaId}`}
+                          to={`viewcustomer/${item.professionalId}`}
                           state={{
-                            user: { professionaId: item.professionaId },
+                            user: {professionalId: item.professionalId},
                           }}
-                          style={{ paddingLeft: "15px" }}
-                        >
+                          style={{paddingLeft: '15px'}}>
                           <img
                             src={viewData}
                             height="20px"
@@ -287,16 +272,14 @@ const Table = () => {
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="prev-next"
-            >
+              className="prev-next">
               &lt; <span>Previous</span>
             </button>
             {renderPageNumbers()}
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="prev-next"
-            >
+              className="prev-next">
               <span>Next</span> &gt;
             </button>
           </div>

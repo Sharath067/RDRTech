@@ -1,116 +1,126 @@
-import React, { useState } from "react";
-import "./CreatingSubscriptionPlans.css";
-import { useAuth } from "../AuthContexts/AuthContext";
-import Header from "../../components/Header/Header";
-import { Link, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, {useState} from 'react';
+import './CreatingSubscriptionPlans.css';
+import Header from '../../components/Header/Header';
+import {Link, useNavigate} from 'react-router-dom';
+import {toast, ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {createSubscriptionPlan} from '../apiServices/apiServices';
 
 const CreatingSubscriptionPlans = () => {
-  const { token } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    planName: "",
-    planDescription: "",
-    planDuration: "",
-    planAmount: "",
-    numberOfProjects: "",
-    numberOfEmployees: "",
-    numberOfClients: "",
-    isPlanActive: "",
+    planName: '',
+    planDescription: '',
+    planDuration: '',
+    planAmount: '',
+    numberOfProjects: '',
+    numberOfEmployees: '',
+    numberOfClients: '',
+    isPlanActive: '',
   });
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  // const formattedAmount = amount.toLocaleString();
+  const predefinedPlans = {
+    Trial: {duration: 7, amount: 0.0},
+    Premium: {duration: 30, amount: 999},
+    Quarterly: {duration: 90, amount: 2999},
+    Annual: {duration: 365, amount: 14999},
+  };
+
+  console.log(message);
+
+  const handlePlanSelect = e => {
+    const selectedPlan = e.target.value;
+    setFormData({
+      ...formData,
+      planName: selectedPlan,
+      planDuration: predefinedPlans[selectedPlan]?.duration || '',
+      planAmount: predefinedPlans[selectedPlan]?.amount || 0,
+    });
+    setErrors({
+      ...errors,
+      planName: '',
+      planDuration: '',
+      planAmount: '',
+    });
+  };
+
+  const handleChange = e => {
+    const {name, value} = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
     setErrors({
       ...errors,
-      [name]: "",
+      [name]: '',
     });
   };
 
   const validateField = (name, value) => {
-    let error = "";
+    let error = '';
     if (!value) {
-      if (name !== "isPlanActive") {
-        error = "Please enter the Account status";
+      if (name !== 'isPlanActive') {
+        error = 'Please enter the Account status';
       }
       error = `Please enter the ${name
-        .replace("plan", "")
-        .replace("numberOf", "")
+        .replace('plan', '')
+        .replace('numberOf', '')
         .toLowerCase()}`;
     } else if (
-      (name === "planDuration" ||
-        name === "planAmount" ||
-        name.startsWith("numberOf")) &&
+      (name === 'planDuration' ||
+        name === 'planAmount' ||
+        name.startsWith('numberOf')) &&
       isNaN(value)
     ) {
       error = `${name
-        .replace("plan", "")
-        .replace("numberOf", "")
-        .replace(/([A-Z])/g, " $1")
+        .replace('plan', '')
+        .replace('numberOf', '')
+        .replace(/([A-Z])/g, ' $1')
         .toLowerCase()} must be a number`;
     }
-    setErrors((prevErrors) => ({
+    setErrors(prevErrors => ({
       ...prevErrors,
       [name]: error,
     }));
     return error;
   };
 
-  const handleBlur = (e) => {
-    const { name, value } = e.target;
+  const handleBlur = e => {
+    const {name, value} = e.target;
     validateField(name, value);
   };
 
-  const submitPlan = async (postData) => {
+  const submitPlan = async postData => {
     try {
-      const response = await fetch(
-        "http://54.152.49.191:8080/subscription/save",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(postData),
-        }
-      );
-
-      const result = await response.json();
-      toast.success("Plan created successfully!");
-      console.log("Success:", result);
-
+      await createSubscriptionPlan(postData);
+      toast.success('Plan created successfully!');
       setFormData({
-        planName: "",
-        planDescription: "",
-        planDuration: "",
-        planAmount: "",
-        numberOfProjects: "",
-        numberOfEmployees: "",
-        numberOfClients: "",
-        isPlanActive: "",
+        planName: '',
+        planDescription: '',
+        planDuration: '',
+        planAmount: '',
+        numberOfProjects: '',
+        numberOfEmployees: '',
+        numberOfClients: '',
+        isPlanActive: '',
       });
       setTimeout(() => {
-        navigate("/admin/subscription");
+        navigate('/admin/subscription');
       }, 1000);
     } catch (error) {
-      toast.error("Failed to create plan. Please try again.");
-      console.error("Error:", error);
+      toast.error('Failed to create plan. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
     let valid = true;
@@ -127,7 +137,7 @@ const CreatingSubscriptionPlans = () => {
     setErrors(newErrors);
 
     if (!valid) {
-      setMessage("Please correct the errors above");
+      setMessage('Please correct the errors above');
       return;
     }
 
@@ -139,11 +149,11 @@ const CreatingSubscriptionPlans = () => {
       numberOfProjects: parseInt(formData.numberOfProjects),
       numberOfEmployees: parseInt(formData.numberOfEmployees),
       numberOfClients: parseInt(formData.numberOfClients),
-      isPlanActive: formData.isPlanActive,
+      isPlanActive: formData.isPlanActive === 'true',
     };
 
     setLoading(true);
-    setMessage("");
+    setMessage('');
     await submitPlan(postData);
   };
 
@@ -156,8 +166,7 @@ const CreatingSubscriptionPlans = () => {
           <Link to="/admin/subscription">
             <i
               className="fa fa-arrow-left fa-1x arrowLeft"
-              aria-hidden="true"
-            ></i>
+              aria-hidden="true"></i>
           </Link>
         </span>
         <div className="create-sub-container">
@@ -167,14 +176,16 @@ const CreatingSubscriptionPlans = () => {
             <form className="create-plan-form" onSubmit={handleSubmit}>
               <label>
                 Plan Name
-                <input
-                  type="text"
+                <select
                   name="planName"
-                  placeholder="Enter plan name"
                   value={formData.planName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
+                  onChange={handlePlanSelect}>
+                  <option value="">Select Plan Type</option>
+                  <option value="Trial">Trial</option>
+                  <option value="Premium">Premium</option>
+                  <option value="Quarterly">Quarterly</option>
+                  <option value="Annual">Annual</option>
+                </select>
                 {errors.planName && (
                   <span className="error">{errors.planName}</span>
                 )}
@@ -235,20 +246,24 @@ const CreatingSubscriptionPlans = () => {
                   <span className="error">{errors.planDescription}</span>
                 )}
               </label>
+
               <label>
-                Plan Duration
-                <input
-                  type="text"
-                  name="planDuration"
-                  placeholder="Enter plan duration"
-                  value={formData.planDuration}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-                {errors.planDuration && (
-                  <span className="error">{errors.planDuration}</span>
+                Plan Duration (Days)
+                <select
+                  name="planName"
+                  value={formData.planName}
+                  onChange={handlePlanSelect}>
+                  <option value="">Select Plan Type</option>
+                  <option value="Trial">7 days</option>
+                  <option value="Premium">30 days</option>
+                  <option value="Quarterly">90 days</option>
+                  <option value="Annual">365 days</option>
+                </select>
+                {errors.planName && (
+                  <span className="error">{errors.planName}</span>
                 )}
               </label>
+
               <label>
                 Plan Amount
                 <input
@@ -257,7 +272,7 @@ const CreatingSubscriptionPlans = () => {
                   placeholder="Enter plan amount"
                   value={formData.planAmount}
                   onChange={handleChange}
-                  onBlur={handleBlur}
+                  readOnly
                 />
                 {errors.planAmount && (
                   <span className="error">{errors.planAmount}</span>
@@ -268,8 +283,7 @@ const CreatingSubscriptionPlans = () => {
                 name="isPlanActive"
                 value={formData.isPlanActive}
                 onChange={handleChange}
-                onBlur={handleBlur}
-              >
+                onBlur={handleBlur}>
                 <option value="">Select Status</option>
                 <option value={true}>TRUE</option>
                 <option value={false}>FALSE</option>
@@ -283,9 +297,8 @@ const CreatingSubscriptionPlans = () => {
                 <button
                   type="submit"
                   className="create-button"
-                  disabled={loading}
-                >
-                  {loading ? "Creating..." : "Create Plan"}
+                  disabled={loading}>
+                  {loading ? 'Creating...' : 'Create Plan'}
                 </button>
               </div>
             </form>

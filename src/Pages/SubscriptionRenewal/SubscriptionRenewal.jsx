@@ -1,37 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import './SubscriptionRenewal.css';
-import { FaSearch } from 'react-icons/fa';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../AuthContexts/AuthContext'; 
+import {FaSearch} from 'react-icons/fa';
+import {NavLink, useNavigate} from 'react-router-dom';
 import Header from '../../components/Header/Header';
-import viewData from "../../Assets/Images/eye-scanner.png";
-
+import viewData from '../../Assets/Images/eye-scanner.png';
+import {
+  fetchExpiredProfessionals,
+  notifyAllSubscriptionExpiredUsers,
+} from '../apiServices/apiServices';
 
 const SubscriptionRenewal = () => {
-
-  const { token } = useAuth();
   const navigate = useNavigate();
   const [searchItem, setSearchItem] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
   const itemsPerPage = 5;
 
   const today = new Date();
   const oneWeekFromNow = new Date();
   oneWeekFromNow.setDate(today.getDate() + 7);
 
-  useEffect(() => { 
+  const token = localStorage.getItem('jwtToken');
+
+  useEffect(() => {
     const fetchData = async () => {
-      if(token){
+      if (token) {
         try {
-          const response = await fetch('http://54.152.49.191:8080/admin/professionals/subscriptionExpiredProfessionals', {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-          const result = await response.json();
-          console.log("Fetched Result: ", result); 
+          const result = await fetchExpiredProfessionals(token);
           setData(result);
         } catch (error) {
           console.error('Error fetching data:', error);
@@ -42,28 +38,25 @@ const SubscriptionRenewal = () => {
     fetchData();
   }, [token]);
 
-  const filterData = data.filter((item) => 
-    item.accountStatus === 'Active' && item.subscriptionStatus === 'Active' &&
-    (item.professionalName.toLowerCase().includes(searchItem.toLowerCase()) ||
-     item.emailId.toLowerCase().includes(searchItem.toLowerCase()) ||
-     item.phoneNumber.includes(searchItem) ||
-     item.companyName.toLowerCase().includes(searchItem.toLowerCase()))
+  const filterData = data.filter(
+    item =>
+      item.accountStatus === 'Active' &&
+      (item.professionalName.toLowerCase().includes(searchItem.toLowerCase()) ||
+        item.emailId.toLowerCase().includes(searchItem.toLowerCase()) ||
+        item.phoneNumber.includes(searchItem) ||
+        item.referenceNumber.includes(searchItem) ||
+        item.companyName.toLowerCase().includes(searchItem.toLowerCase())),
   );
 
-  // const isSubscriptionEndingSoon = endDate => {
-  //   const subscriptionEndDate = new Date(endDate);
-  //   return subscriptionEndDate <= oneWeekFromNow && subscriptionEndDate >= today;
-  // };
+  console.log('Filtered Data: ', filterData);
 
-  console.log("Filtered Data: ", filterData); 
-  
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = filterData.slice(startIndex, endIndex);
 
-  console.log("Current Items: ", currentItems); 
-  console.log("Start Index: ", startIndex); 
-  console.log("End Index: ", endIndex);  
+  console.log('Current Items: ', currentItems);
+  console.log('Start Index: ', startIndex);
+  console.log('End Index: ', endIndex);
 
   const totalPages = Math.ceil(filterData.length / itemsPerPage);
 
@@ -71,7 +64,7 @@ const SubscriptionRenewal = () => {
     setCurrentPage(newPage);
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = e => {
     setSearchItem(e.target.value);
     setCurrentPage(1);
   };
@@ -79,21 +72,10 @@ const SubscriptionRenewal = () => {
   const handleNotifyAll = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://54.152.49.191:8080/api/email/notifyAllSubscriptionExpiredUsers', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      console.log("Notify all response : ",response);
-      if (response.ok) {
-        console.log('Notifications sent to all users.');
-      } else {
-        console.error('Failed to send notifications.');
-      }
+      await notifyAllSubscriptionExpiredUsers(token);
+      console.log('Notifications sent to all users.');
     } catch (error) {
-      console.error('Error sending notifications:', error);
+      console.error('Failed to send notifications:', error);
     } finally {
       setIsLoading(false);
     }
@@ -106,10 +88,9 @@ const SubscriptionRenewal = () => {
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`page-number ${currentPage === i ? 'active' : ''}`}
-        >
+          className={`page-number ${currentPage === i ? 'active' : ''}`}>
           {i}
-        </button>
+        </button>,
       );
     }
     return pages;
@@ -117,9 +98,9 @@ const SubscriptionRenewal = () => {
 
   const getStatusClass = (status, type) => {
     if (type === 'account') {
-      return 'status-approved';
+      return status === 'Active' ? 'status-approved' : 'status-renewal';
     } else if (type === 'subscription') {
-      return 'status-pending';
+      return status === 'Pending' ? 'status-renewal' : 'status-approved';
     }
   };
 
@@ -133,8 +114,7 @@ const SubscriptionRenewal = () => {
               <i
                 className="fa fa-arrow-left fa-1x"
                 aria-hidden="true"
-                onClick={() => navigate(-1)}
-              ></i>
+                onClick={() => navigate(-1)}></i>
             </span>
             <h4 className="heading-name"> Subscription renewal List</h4>
           </div>
@@ -142,9 +122,8 @@ const SubscriptionRenewal = () => {
             <button
               className="notify-all"
               onClick={handleNotifyAll}
-              disabled={isLoading}
-            >
-              {isLoading ? "Notifying..." : "Notify All"}
+              disabled={isLoading}>
+              {isLoading ? 'Notifying...' : 'Notify All'}
             </button>
           </div>
         </div>
@@ -167,7 +146,7 @@ const SubscriptionRenewal = () => {
           <table>
             <thead>
               <tr>
-                <th className="slno-1">ID</th>
+                <th className="slno-1">Reference No</th>
                 <th className="name-1">Name</th>
                 <th className="email-1">Email</th>
                 <th className="phone-1">Phone</th>
@@ -179,41 +158,47 @@ const SubscriptionRenewal = () => {
             </thead>
             <tbody>
               {currentItems.map((item, index) => {
-                const serialNumber = startIndex + index + 1;
+                const referenceNumber = startIndex + index + 1;
                 return (
                   <tr key={index}>
-                    <td>{serialNumber}</td>
-                    <td>{item.professionalName || "N/A"}</td>
-                    <td>{item.emailId || "N/A"}</td>
-                    <td>{item.phoneNumber || "N/A"}</td>
-                    <td>{item.companyName || "N/A"}</td>
+                    <td>{item.referenceNumber}</td>
+                    <td>{item.professionalName || 'N/A'}</td>
+                    <td>{item.emailId || 'N/A'}</td>
+                    <td>{item.phoneNumber || 'N/A'}</td>
+                    <td>{item.companyName || 'N/A'}</td>
                     <td>
                       <span
                         className={getStatusClass(
                           item.accountStatus,
-                          item.subscriptionStatus
-                        )}
-                      >
-                        {item.accountStatus || "N/A"}
+                          'account',
+                        )}>
+                        {item.accountStatus || 'N/A'}
                       </span>
                     </td>
                     <td>
                       <span
                         className={getStatusClass(
-                          item.accountStatus,
-                          item.subscriptionStatus
-                        )}
-                      >
-                        {item.subscriptionStatus || "N/A"}
+                          item.subscriptionStatus,
+                          'subscription',
+                        )}>
+                        {item.subscriptionStatus === 'Pending'
+                          ? 'Expiring'
+                          : item.subscriptionStatus || 'N/A'}
                       </span>
                     </td>
+
                     <td>
                       <NavLink
-                        to={`viewcustomer/${item.professionaId}`}
-                        state={{ user: { professionaId: item.professionaId } }} style={{paddingLeft: '15px'}}
-                      >
-                      {/* <i className="fa fa-eye" aria-hidden="true"></i> */}
-                      <img src={viewData} height="20px" width="20px" alt="view-data"  />
+                        to={`viewcustomer/${item.professionalId}`}
+                        state={{user: {professionalId: item.professionalId}}}
+                        style={{paddingLeft: '15px'}}
+                        className="nav-link">
+                        <img
+                          src={viewData}
+                          height="20px"
+                          width="20px"
+                          alt="view-data"
+                        />
                       </NavLink>
                     </td>
                   </tr>
@@ -225,23 +210,21 @@ const SubscriptionRenewal = () => {
         <div className="pagination-section">
           <div className="pagination-pagecount">
             <span>
-              Showing page {currentPage} of {totalPages} 
+              Showing page {currentPage} of {totalPages}
             </span>
           </div>
           <div className="pagination-buttons">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="prev-next"
-            >
+              className="prev-next">
               &lt; <span>Previous</span>
             </button>
             {renderPageNumbers()}
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="prev-next"
-            >
+              className="prev-next">
               <span>Next</span> &gt;
             </button>
           </div>

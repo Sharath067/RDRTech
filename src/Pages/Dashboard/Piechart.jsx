@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Pie } from "react-chartjs-2";
 import "chartjs-plugin-datalabels";
-import axios from "axios";
 import { useAuth } from "../AuthContexts/AuthContext";
+import { fetchPieChartData } from "../apiServices/apiServices";
 
 const UserPieChart = () => {
   const { token } = useAuth();
@@ -14,24 +14,66 @@ const UserPieChart = () => {
     subscriptionExpiredUsers: 0,
   });
 
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     const token = localStorage.getItem("jwtToken");
+  //     console.log("Token from the pie chart:", token);
+  //     if (token) {
+  //       try {
+  //         // Await the fetch response
+  //         const response = await fetch("http://54.152.49.191:8080/admin/dashboard", {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         });
+
+  //         // Check if the response is OK (status code 200)
+  //         if (response.ok) {
+  //           // Parse the response JSON
+  //           const data = await response.json();
+
+  //           // Destructure the user data from the response
+  //           const {
+  //             activeUsers,
+  //             accountApprovalPendingUsers,
+  //             subscriptionPendingUsers,
+  //             subscriptionExpiredUsers,
+  //           } = data;
+
+  //           // Set the user data
+  //           setUserData({
+  //             activeUsers,
+  //             accountApprovalPendingUsers,
+  //             subscriptionPendingUsers,
+  //             subscriptionExpiredUsers,
+  //           });
+  //         } else {
+  //           console.error("Failed to fetch user data. Status:", response.status);
+  //         }
+  //       } catch (error) {
+  //         console.error("Error fetching user data:", error);
+  //       }
+  //     }
+  //   };
+
+  //   fetchUserData();
+  // }, [token]);
+
   useEffect(() => {
-    const fetchUserData = async () => {
+    const getUserData = async () => {
+      const token = localStorage.getItem("jwtToken");
+      console.log("Token from the pie chart:", token);
+
       if (token) {
         try {
-          const response = await axios.get(
-            "http://54.152.49.191:8080/admin/dashboard",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const data = await fetchPieChartData(token);
           const {
             activeUsers,
             accountApprovalPendingUsers,
             subscriptionPendingUsers,
             subscriptionExpiredUsers,
-          } = response.data;
+          } = data;
+
           setUserData({
             activeUsers,
             accountApprovalPendingUsers,
@@ -44,8 +86,9 @@ const UserPieChart = () => {
       }
     };
 
-    fetchUserData();
+    getUserData();
   }, [token]);
+
 
   const isEmptyData = Object.values(userData).every((count) => count === 0);
 
@@ -116,4 +159,5 @@ const UserPieChart = () => {
     </div>
   );
 };
+
 export default UserPieChart;

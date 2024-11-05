@@ -1,51 +1,69 @@
-import React, { useState, useEffect } from "react";
-import "./ActiveUser.css";
-import { FaSearch } from "react-icons/fa";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../AuthContexts/AuthContext";
-import Header from "../../components/Header/Header";
-import viewData from "../../Assets/Images/eye-scanner.png";
+import React, {useState, useEffect} from 'react';
+import './ActiveUser.css';
+import {FaSearch} from 'react-icons/fa';
+import {NavLink, useNavigate} from 'react-router-dom';
+import {useAuth} from '../AuthContexts/AuthContext';
+import Header from '../../components/Header/Header';
+import viewData from '../../Assets/Images/eye-scanner.png';
+import {fetchActiveUsers} from '../apiServices/apiServices';
 
 const ActiveUser = () => {
-  const { token } = useAuth();
+  const {token} = useAuth();
   const navigate = useNavigate();
-  const [searchItem, setSearchItem] = useState("");
+  const [searchItem, setSearchItem] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
   const itemsPerPage = 5;
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const token = localStorage.getItem("jwtToken");
+  //     console.log("Token in the active users: ", token);
+  //     if (token) {
+  //       try {
+  //         const response = await fetch(
+  //           "http://54.152.49.191:8080/admin/professionals/active",
+  //           {
+  //             headers: {
+  //               Authorization: `Bearer ${token}`,
+  //             },
+  //           }
+  //         );
+  //         const result = await response.json();
+  //         console.log("Fetched Result: ", result);
+  //         setData(result);
+  //       } catch (error) {
+  //         console.error("Error fetching data:", error);
+  //       }
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [token]);
+
   useEffect(() => {
-    const fetchData = async () => {
+    const loadActiveUsers = async () => {
+      const token = localStorage.getItem('jwtToken');
       if (token) {
-        try {
-          const response = await fetch(
-            "http://54.152.49.191:8080/admin/professionals/active",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const result = await response.json();
-          console.log("Fetched Result: ", result);
-          setData(result);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
+        const result = await fetchActiveUsers(token);
+        console.log('Fetched Active Users: ', result);
+        console.log('Token from the active user : ', token);
+        setData(result);
       }
     };
 
-    fetchData();
+    loadActiveUsers();
   }, [token]);
 
   const filterData = data.filter(
-    (item) =>
-      item.accountStatus.toLowerCase() === "active" &&
-      item.subscriptionStatus.toLowerCase() === "active" &&
+    item =>
+      item.accountStatus.toLowerCase() === 'active' &&
+      item.subscriptionStatus.toLowerCase() === 'active' &&
       (item.professionalName.toLowerCase().includes(searchItem.toLowerCase()) ||
         item.emailId.toLowerCase().includes(searchItem.toLowerCase()) ||
         item.phoneNumber.includes(searchItem) ||
-        item.companyName.toLowerCase().includes(searchItem.toLowerCase()))
+        item.referenceNumber.includes(searchItem) ||
+        item.companyName.toLowerCase().includes(searchItem.toLowerCase())),
   );
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -54,11 +72,11 @@ const ActiveUser = () => {
 
   const totalPages = Math.ceil(filterData.length / itemsPerPage);
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = newPage => {
     setCurrentPage(newPage);
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = e => {
     setSearchItem(e.target.value);
     setCurrentPage(1);
   };
@@ -70,10 +88,9 @@ const ActiveUser = () => {
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`page-number ${currentPage === i ? "active" : ""}`}
-        >
+          className={`page-number ${currentPage === i ? 'active' : ''}`}>
           {i}
-        </button>
+        </button>,
       );
     }
     return pages;
@@ -81,12 +98,12 @@ const ActiveUser = () => {
 
   const getStatusClass = (accountStatus, subscriptionStatus) => {
     if (
-      accountStatus.toLowerCase() === "active" &&
-      subscriptionStatus.toLowerCase() === "active"
+      accountStatus.toLowerCase() === 'active' &&
+      subscriptionStatus.toLowerCase() === 'active'
     ) {
-      return "status-approved";
+      return 'status-approved';
     } else {
-      return "status-pending";
+      return 'status-pending';
     }
   };
 
@@ -100,8 +117,7 @@ const ActiveUser = () => {
               <i
                 className="fa fa-arrow-left fa-1x"
                 aria-hidden="true"
-                onClick={() => navigate(-1)}
-              ></i>
+                onClick={() => navigate(-1)}></i>
             </span>
             <h4 className="heading-name"> Active User's List</h4>
           </div>
@@ -127,7 +143,7 @@ const ActiveUser = () => {
             <table>
               <thead>
                 <tr>
-                  <th className="slno-1">ID</th>
+                  <th className="slno-1">Reference No</th>
                   <th className="name-1">Name</th>
                   <th className="email-1">Email</th>
                   <th className="phone-1">Phone</th>
@@ -139,42 +155,40 @@ const ActiveUser = () => {
               </thead>
               <tbody>
                 {currentItems.map((item, index) => {
-                  const serialNumber = startIndex + index + 1;
+                  const referenceNumber = startIndex + index + 1;
                   return (
                     <tr key={index}>
-                      <td>{serialNumber}</td>
-                      <td>{item.professionalName || "N/A"}</td>
-                      <td>{item.emailId || "N/A"}</td>
-                      <td>{item.phoneNumber || "N/A"}</td>
-                      <td>{item.companyName || "N/A"}</td>
+                      <td>{item.referenceNumber}</td>
+                      <td>{item.professionalName || 'N/A'}</td>
+                      <td>{item.emailId || 'N/A'}</td>
+                      <td>{item.phoneNumber || 'N/A'}</td>
+                      <td>{item.companyName || 'N/A'}</td>
                       <td>
                         <span
                           className={getStatusClass(
                             item.accountStatus,
-                            item.subscriptionStatus
-                          )}
-                        >
-                          {item.accountStatus || "N/A"}
+                            item.subscriptionStatus,
+                          )}>
+                          {item.accountStatus || 'N/A'}
                         </span>
                       </td>
                       <td>
                         <span
                           className={getStatusClass(
                             item.accountStatus,
-                            item.subscriptionStatus
-                          )}
-                        >
-                          {item.subscriptionStatus || "N/A"}
+                            item.subscriptionStatus,
+                          )}>
+                          {item.subscriptionStatus || 'N/A'}
                         </span>
                       </td>
                       <td>
                         <NavLink
-                          to={`viewcustomer/${item.professionaId}`}
+                          to={`viewcustomer/${item.professionalId}`}
                           state={{
-                            user: { professionaId: item.professionaId },
+                            user: {professionalId: item.professionalId},
                           }}
-                          style={{ paddingLeft: "15px" }}
-                        >
+                          style={{paddingLeft: '15px'}}
+                          className="nav-link">
                           <img
                             src={viewData}
                             height="20px"
@@ -200,16 +214,14 @@ const ActiveUser = () => {
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="prev-next"
-            >
+              className="prev-next">
               &lt; <span>Previous</span>
             </button>
             {renderPageNumbers()}
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="prev-next"
-            >
+              className="prev-next">
               <span>Next</span> &gt;
             </button>
           </div>

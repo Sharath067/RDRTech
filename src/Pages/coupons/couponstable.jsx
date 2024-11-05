@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuth } from "../AuthContexts/AuthContext";
+// import { useAuth } from "../AuthContexts/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 import couponService from "./coupon.service";
 import "./Couponstable.css";
 
 const CouponList = () => {
-  const { token } = useAuth();
+  // const { token } = useAuth();
   const [searchItem, setSearchItem] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
@@ -15,6 +15,8 @@ const CouponList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState(null);
   const [errors, setErrors] = useState({});
+
+  const token = localStorage.getItem('jwtToken');
 
   useEffect(() => {
     const fetchCoupons = async () => {

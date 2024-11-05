@@ -22,6 +22,8 @@ function Admin() {
       <Sidebar>
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="admin" element={<Dashboard />} />
+          <Route path="/admin" element={<Dashboard />} />
           <Route path="dashboard/" element={<Dashboard />} />
           <Route path="customers/" element={<Customers />} />
           <Route path="admin/dashboard" element={<Dashboard />} />
@@ -64,6 +66,14 @@ function Admin() {
           <Route
             path="dashboard/subscription-renewal"
             element={<SubscriptionRenewal />}
+          />
+          <Route
+            path="dashboard/subscription-renewal/viewcustomer"
+            element={<CustomersView />}
+          />
+          <Route
+            path="dashboard/subscription-renewal/viewcustomer/:id"
+            element={<CustomersView />}
           />
           <Route path="dashboard/" element={<Dashboard />}>
             <Route path="active-users" element={<ActiveUser />} />

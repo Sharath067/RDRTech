@@ -3,12 +3,13 @@ import Login from "./components/Login/Login";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import Admin from "./components/Admin/Admin";
-import ProtectRouting from "./components/Protect-Routing/ProtectRouting";
 import { auth } from "./firebase";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import ForgotPass from "./components/Login/ForgotPass";
+import ProtectRouting from "./Pages/ProtectRouting/ProtectRouting";
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -51,7 +52,7 @@ function App() {
               </ProtectRouting>
             }
           />
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPass />} />
         </Routes>
       </BrowserRouter>

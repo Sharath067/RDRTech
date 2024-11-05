@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
-import ChartBar from "./chart";
-import UserPieChart from "./Piechart";
-import Header from "../../components/Header/Header";
-import ActiveUser from "../ActiveUsers/ActiveUser";
-import PendingUsers from "../PendingUsers/PendingUsers";
-import "./Dashboard.css";
-import ApprovedPendingSub from "../ApprovedPendingSubscription/ApprovedPendingSub";
-import SubscriptionRenewal from "../SubscriptionRenewal/SubscriptionRenewal";
-import { NavLink } from "react-router-dom";
-import { useAuth } from "../AuthContexts/AuthContext";
+import React, {useState, useEffect} from 'react';
+import ChartBar from './chart';
+import UserPieChart from './Piechart';
+import Header from '../../components/Header/Header';
+import ActiveUser from '../ActiveUsers/ActiveUser';
+import PendingUsers from '../PendingUsers/PendingUsers';
+import './Dashboard.css';
+import ApprovedPendingSub from '../ApprovedPendingSubscription/ApprovedPendingSub';
+import SubscriptionRenewal from '../SubscriptionRenewal/SubscriptionRenewal';
+import {NavLink} from 'react-router-dom';
+import {fetchDashboardData} from '../apiServices/apiServices';
+// import { useAuth } from "../AuthContexts/AuthContext";
 
 const Dashboard = () => {
-  const { token } = useAuth();
+  // const { token } = useAuth();
   const [selectedSection, setSelectedSection] = useState(null);
   const [data, setData] = useState({
     activeUsers: 0,
@@ -22,32 +23,18 @@ const Dashboard = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (token) {
-        try {
-          const response = await fetch(
-            "http://54.152.49.191:8080/admin/dashboard",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const result = await response.json();
-          setData({
-            activeUsers: result.activeUsers,
-            accountApprovalPendingUsers: result.accountApprovalPendingUsers,
-            subscriptionPendingUsers: result.subscriptionPendingUsers,
-            subscriptionExpiredUsers: result.subscriptionExpiredUsers,
-          });
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
+    const loadDashboardData = async () => {
+      try {
+        // Call the service to get the data
+        const result = await fetchDashboardData();
+        setData(result);
+      } catch (error) {
+        console.error('Error loading dashboard data:', error);
       }
     };
 
-    fetchData();
-  }, [token]);
+    loadDashboardData();
+  }, []);
 
   useEffect(() => {
     let resizeTimeout;
@@ -59,27 +46,27 @@ const Dashboard = () => {
       }, 300);
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
       clearTimeout(resizeTimeout);
     };
   }, []);
 
-  const handleSectionClick = (section) => {
+  const handleSectionClick = section => {
     setSelectedSection(section);
   };
 
   const renderSection = () => {
     switch (selectedSection) {
-      case "activeUsers":
+      case 'activeUsers':
         return <ActiveUser />;
-      case "pendingUsers":
+      case 'pendingUsers':
         return <PendingUsers />;
-      case "approvedPendingUsers":
+      case 'approvedPendingUsers':
         return <ApprovedPendingSub />;
-      case "subscriptionRenewal":
+      case 'subscriptionRenewal':
         return <SubscriptionRenewal />;
       default:
         return (
@@ -89,9 +76,8 @@ const Dashboard = () => {
                 to="/admin/dashboard/active-users"
                 className="content-items"
                 id="item1"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleSectionClick("activeUsers")}
-              >
+                style={{cursor: 'pointer'}}
+                onClick={() => handleSectionClick('activeUsers')}>
                 <h4> Active Users</h4>
                 <p>{data.activeUsers}</p>
               </NavLink>
@@ -99,9 +85,8 @@ const Dashboard = () => {
                 to="/admin/dashboard/pending-users"
                 className="content-items"
                 id="item2"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleSectionClick("pendingUsers")}
-              >
+                style={{cursor: 'pointer'}}
+                onClick={() => handleSectionClick('pendingUsers')}>
                 <h4> Pending Users</h4>
                 <p>{data.accountApprovalPendingUsers}</p>
               </NavLink>
@@ -109,9 +94,8 @@ const Dashboard = () => {
                 to="/admin/dashboard/approved-pending-subscription"
                 className="content-items"
                 id="item3"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleSectionClick("approvedPendingUsers")}
-              >
+                style={{cursor: 'pointer'}}
+                onClick={() => handleSectionClick('approvedPendingUsers')}>
                 <h4> Approved Pending Subscription</h4>
                 <p>{data.subscriptionPendingUsers}</p>
               </NavLink>
@@ -119,9 +103,8 @@ const Dashboard = () => {
                 to="/admin/dashboard/subscription-renewal"
                 className="content-items"
                 id="item4"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleSectionClick("subscriptionRenewal")}
-              >
+                style={{cursor: 'pointer'}}
+                onClick={() => handleSectionClick('subscriptionRenewal')}>
                 <h4> Subscription Renewal</h4>
                 <p>{data.subscriptionExpiredUsers}</p>
               </NavLink>
