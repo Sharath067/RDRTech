@@ -570,3 +570,53 @@ p {
   .error-message{
     margin-top: -20px;
   }
+
+
+  .reject-popup-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .reject-popup-fields label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .reject-popup-fields select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 20px;
+    cursor: pointer;
+  }
+  
+  .reject-popup-fields select:focus {
+    outline: none;
+    border-color: #2568ef;
+    box-shadow: 0 0 0 2px rgba(37, 104, 239, 0.2);
+  }
+  
+  .reject-popup-fields select option {
+    background-color: #fff;
+    color: #333;
+  }
+
+  .error-type-select{
+    min-width: 300px;
+  }
+
+  .error-type-select option {
+    width: 50px;
+  }

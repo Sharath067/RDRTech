@@ -65,10 +65,10 @@ const UpdateSubscriptionPlans = () => {
   };
 
   const predefinedPlans = {
-    Trial: {duration: 7, amount: 0.0},
-    Premium: {duration: 30, amount: 999},
-    Quarterly: {duration: 90, amount: 2999},
-    Annual: {duration: 365, amount: 14999},
+    FREE: {duration: 7, amount: 0},
+    Premium: {duration: 1, amount: 999},
+    Quarterly: {duration: 3, amount: 2999},
+    Annual: {duration: 12, amount: 14999},
   };
 
   const handlePlanSelect = e => {
@@ -145,15 +145,6 @@ const UpdateSubscriptionPlans = () => {
               existing ones.
             </p>
             <form className="create-plan-form" onSubmit={handleSubmit}>
-              {/* <label>
-                Plan Name
-                <input
-                  type="text"
-                  name="planName"
-                  value={formData.planName}
-                  onChange={handleChange}
-                />
-              </label> */}
               <label>
                 Plan Name
                 <select
@@ -161,7 +152,7 @@ const UpdateSubscriptionPlans = () => {
                   value={formData.planName}
                   onChange={handlePlanSelect}>
                   <option value="">Select Plan Type</option>
-                  <option value="Trial">Trial</option>
+                  <option value="FREE">FREE</option>
                   <option value="Premium">Premium</option>
                   <option value="Quarterly">Quarterly</option>
                   <option value="Annual">Annual</option>
@@ -207,7 +198,9 @@ const UpdateSubscriptionPlans = () => {
                 />
               </label>
               <label>
-                Plan Duration (Days)
+                {/* Plan Duration (Days) */}
+                Plan Duration (
+                {formData.planName === 'FREE' ? 'Days' : 'Months'})
                 <input
                   type="text"
                   name="planDuration"

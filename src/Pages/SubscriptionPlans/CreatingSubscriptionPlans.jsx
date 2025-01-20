@@ -26,10 +26,10 @@ const CreatingSubscriptionPlans = () => {
 
   // const formattedAmount = amount.toLocaleString();
   const predefinedPlans = {
-    Trial: {duration: 7, amount: 0.0},
-    Premium: {duration: 30, amount: 999},
-    Quarterly: {duration: 90, amount: 2999},
-    Annual: {duration: 365, amount: 14999},
+    FREE: {duration: 7, amount: 1},
+    Premium: {duration: 1, amount: 999},
+    Quarterly: {duration: 3, amount: 2999},
+    Annual: {duration: 12, amount: 14999},
   };
 
   console.log(message);
@@ -181,7 +181,7 @@ const CreatingSubscriptionPlans = () => {
                   value={formData.planName}
                   onChange={handlePlanSelect}>
                   <option value="">Select Plan Type</option>
-                  <option value="Trial">Trial</option>
+                  <option value="FREE">FREE</option>
                   <option value="Premium">Premium</option>
                   <option value="Quarterly">Quarterly</option>
                   <option value="Annual">Annual</option>
@@ -248,16 +248,16 @@ const CreatingSubscriptionPlans = () => {
               </label>
 
               <label>
-                Plan Duration (Days)
+                Plan Duration
                 <select
                   name="planName"
                   value={formData.planName}
                   onChange={handlePlanSelect}>
                   <option value="">Select Plan Type</option>
-                  <option value="Trial">7 days</option>
-                  <option value="Premium">30 days</option>
-                  <option value="Quarterly">90 days</option>
-                  <option value="Annual">365 days</option>
+                  <option value="FREE">7 days</option>
+                  <option value="Premium">1 month</option>
+                  <option value="Quarterly">3 months</option>
+                  <option value="Annual">12 months</option>
                 </select>
                 {errors.planName && (
                   <span className="error">{errors.planName}</span>

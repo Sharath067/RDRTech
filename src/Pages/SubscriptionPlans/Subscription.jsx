@@ -1,45 +1,17 @@
-import React, { useState, useEffect } from "react";
-// import axios from "axios";
-import "./Subscription.css";
-import Header from "../../components/Header/Header";
-import { NavLink, useNavigate } from "react-router-dom";
-// import { useAuth } from "../AuthContexts/AuthContext";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { fetchPlans } from "../apiServices/apiServices";
+import React, {useState, useEffect} from 'react';
+import './Subscription.css';
+import Header from '../../components/Header/Header';
+import {NavLink, useNavigate} from 'react-router-dom';
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {fetchPlans} from '../apiServices/apiServices';
 
 const Subscription = () => {
-  // const { token } = useAuth();
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem('jwtToken');
-  //   const fetchPlans = async () => {
-  //     if (token) {
-  //       try {
-  //         const response = await axios.get(
-  //           "http://54.152.49.191:8080/subscription/admin/getAllPlans",
-  //           {
-  //             headers: { Authorization: `Bearer ${token}` },
-  //           }
-  //         );
-  //         console.log("Updated response of subscription : ", response.data);
-  //         setPlans(response.data);
-  //         setLoading(false);
-  //       } catch (err) {
-  //         setError(err);
-  //         setLoading(false);
-  //       }
-  //     }
-  //   };
-
-  //   fetchPlans();
-  // }, []);
-
 
   useEffect(() => {
     const token = localStorage.getItem('jwtToken');
@@ -47,7 +19,7 @@ const Subscription = () => {
       if (token) {
         try {
           const data = await fetchPlans(token);
-          console.log("Updated response of subscription: ", data);
+          console.log('Updated response of subscription: ', data);
           setPlans(data);
         } catch (err) {
           setError(err);
@@ -55,28 +27,24 @@ const Subscription = () => {
           setLoading(false);
         }
       } else {
-        setLoading(false); // Handle case when no token is present
+        setLoading(false);
       }
     };
 
     fetchPlansData();
   }, []);
 
+  const handleCreatePlanClick = () =>
+    navigate('/admin/subscription/creating-plans');
 
-  const handleCreatePlanClick = () => {
-    navigate("/admin/subscription/creating-plans");
-  };
-
-  const handleEditPlanClick = (plan) => {
+  const handleEditPlanClick = plan =>
     navigate(`/admin/subscription/updating-plans/${plan.id}`);
-  };
 
   if (loading) {
     return (
       <div
         className="d-flex justify-content-center align-items-center"
-        style={{ height: "100vh" }}
-      >
+        style={{height: '100vh'}}>
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Loading...</span>
         </div>
@@ -97,10 +65,8 @@ const Subscription = () => {
         <NavLink
           to="/admin/subscription/creating-plans"
           className="create-plan-button1"
-          onClick={handleCreatePlanClick}
-        >
-          <span className="create-plan-span">+</span>
-          add new
+          onClick={handleCreatePlanClick}>
+          <span className="create-plan-span">+</span> add new
         </NavLink>
       </div>
       <div className="main-container contain">
@@ -113,19 +79,35 @@ const Subscription = () => {
             </p>
           </div>
           <div className="plans">
-            {plans.map((plan) => (
+            {plans.map(plan => (
               <div className="plan" key={plan.id}>
                 <div className="plan-name-container">
                   <h2 className="planName">{plan.name}</h2>
                 </div>
-                <p className="price">
-                  &#8377;{plan.subscriptionPlanAmount}{" "}
+                {/* <p className="price">
+                  &#8377;{plan.subscriptionPlanAmount}{' '}
                   <span>
-                    {"/"}
-                    {plan.subscriptionDuration} days
+                    {'/'}
+                    {plan.name.toLowerCase() === 'free'
+                      ? `${plan.subscriptionDuration} days`
+                      : `${Math.ceil(plan.subscriptionDuration / 31)} months`}
+                  </span>
+                </p> */}
+                <p className="price">
+                  &#8377;{plan.subscriptionPlanAmount}{' '}
+                  <span>
+                    {'/'}
+                    {plan.name.toLowerCase() === 'free'
+                      ? `${plan.subscriptionDuration} days`
+                      : plan.name.toLowerCase() === 'premium'
+                      ? '1 month'
+                      : plan.name.toLowerCase() === 'quarterly'
+                      ? '3 months'
+                      : plan.name.toLowerCase() === 'annual'
+                      ? '12 months'
+                      : `${Math.ceil(plan.subscriptionDuration / 31)} months`}
                   </span>
                 </p>
-              
                 <div className="detailed-plans">
                   <div className="plan-detail">
                     <p>
@@ -147,14 +129,14 @@ const Subscription = () => {
                   </div>
                   <div className="plan-detail">
                     <p>
-                      <i className="fa fa-check" aria-hidden="true"></i>Clients:{" "}
+                      <i className="fa fa-check" aria-hidden="true"></i>Clients:{' '}
                       {plan.numberOfClients}
                     </p>
                   </div>
                   <div className="plan-detail">
                     <p>
                       <i className="fa fa-check" aria-hidden="true"></i>
-                      Account: {plan.isPlanActive ? "Active" : "Inactive"}
+                      Account: {plan.isPlanActive ? 'Active' : 'Inactive'}
                     </p>
                   </div>
                 </div>
@@ -163,13 +145,11 @@ const Subscription = () => {
                     to={`/admin/subscription/updating-plans/${plan.id}`}
                     className="editClick"
                     onClick={() => handleEditPlanClick(plan)}
-                    data-tooltip="Edit Plan"
-                  >
+                    data-tooltip="Edit Plan">
                     <i
                       className="fa fa-pencil"
                       aria-hidden="true"
-                      style={{ margin: "5px" }}
-                    ></i>
+                      style={{margin: '5px'}}></i>
                   </NavLink>
                 </div>
               </div>
