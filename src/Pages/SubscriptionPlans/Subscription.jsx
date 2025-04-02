@@ -84,15 +84,6 @@ const Subscription = () => {
                 <div className="plan-name-container">
                   <h2 className="planName">{plan.name}</h2>
                 </div>
-                {/* <p className="price">
-                  &#8377;{plan.subscriptionPlanAmount}{' '}
-                  <span>
-                    {'/'}
-                    {plan.name.toLowerCase() === 'free'
-                      ? `${plan.subscriptionDuration} days`
-                      : `${Math.ceil(plan.subscriptionDuration / 31)} months`}
-                  </span>
-                </p> */}
                 <p className="price">
                   &#8377;{plan.subscriptionPlanAmount}{' '}
                   <span>

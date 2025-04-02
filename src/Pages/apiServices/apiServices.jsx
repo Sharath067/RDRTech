@@ -108,6 +108,7 @@ export const notifyAllSubscriptionExpiredUsers = async () => {
 export const fetchProfessionals = async () => {
   try {
     const response = await axiosInstance.get(`/admin/professionals`);
+    console.log('response of the professionals', response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching professionals:', error);
@@ -169,7 +170,12 @@ export const createSubscriptionPlan = async postData => {
     );
     return response.data;
   } catch (error) {
-    console.error('Error creating subscription plan:', error);
+    if (
+      error.response &&
+      error.response.data.message.includes('already exists')
+    ) {
+      throw new Error('Duplicate plans cannot be created.');
+    }
     throw error;
   }
 };

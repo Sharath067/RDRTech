@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import './CustomersView.css';
 import Header from '../../components/Header/Header';
 import axios from 'axios';
@@ -12,10 +12,45 @@ const CustomersView = () => {
   const [gstDownloaded, setGstDownloaded] = useState(false);
   const [panDownloaded, setPanDownloaded] = useState(false);
   const [showRejectPopup, setShowRejectPopup] = useState(false);
-  // const [rejectReason, setRejectReason] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+
+  // Field selection states
   const [selectedField, setSelectedField] = useState('');
+  const [isCustomField, setIsCustomField] = useState(false);
+  const [fieldOptions, setFieldOptions] = useState([
+    {value: '', label: 'Select a field'},
+    {value: 'gstNumber', label: 'GST Number'},
+    {value: 'panNumber', label: 'PAN Card Number'},
+    {value: 'others', label: 'Others'},
+  ]);
+
+  // Error type states
   const [errorType, setErrorType] = useState('');
+  const [isCustomErrorType, setIsCustomErrorType] = useState(false);
+  const [errorTypeOptions, setErrorTypeOptions] = useState([
+    {value: '', label: 'Please select the reason for rejection'},
+    {
+      value: 'Information provided does not match with the uploaded documents',
+      label: 'Information provided does not match with the uploaded documents',
+    },
+    {
+      value:
+        'Required documentation is incomplete or essential information is missing',
+      label:
+        'Required documentation is incomplete or essential information is missing',
+    },
+    {
+      value:
+        'Provided details are invalid, do not meet our verification standards',
+      label:
+        'Provided details are invalid, do not meet our verification standards',
+    },
+    {value: 'others', label: 'Others'},
+  ]);
+
+  const [errorMessage, setErrorMessage] = useState('');
+  const fieldInputRef = useRef(null);
+  const errorTypeInputRef = useRef(null);
+
   const navigate = useNavigate();
   const token = localStorage.getItem('jwtToken');
 
@@ -24,7 +59,7 @@ const CustomersView = () => {
       if (token) {
         try {
           const response = await axios.get(
-            `http://54.152.49.191:8080/admin/professional/${id}`,
+            `https://rdrtech-api.atparui.com/admin/professional/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -41,11 +76,24 @@ const CustomersView = () => {
     fetchProfessionalData();
   }, [id, token]);
 
+  // Focus input field when switching to custom input mode
+  useEffect(() => {
+    if (isCustomField && fieldInputRef.current) {
+      fieldInputRef.current.focus();
+    }
+  }, [isCustomField]);
+
+  useEffect(() => {
+    if (isCustomErrorType && errorTypeInputRef.current) {
+      errorTypeInputRef.current.focus();
+    }
+  }, [isCustomErrorType]);
+
   const handleApprove = async () => {
     if (token) {
       try {
         const res = await axios.post(
-          `http://54.152.49.191:8080/admin/active/${id}`,
+          `https://rdrtech-api.atparui.com/admin/active/${id}`,
           {},
           {
             headers: {
@@ -61,11 +109,42 @@ const CustomersView = () => {
     }
   };
 
+  const handleFieldChange = e => {
+    const value = e.target.value;
+    setSelectedField(value);
+
+    if (value === 'others') {
+      setIsCustomField(true);
+      setSelectedField(''); // Clear the field to accept custom input
+    } else {
+      setIsCustomField(false);
+    }
+  };
+
+  const handleErrorTypeChange = e => {
+    const value = e.target.value;
+    setErrorType(value);
+
+    if (value === 'others') {
+      setIsCustomErrorType(true);
+      setErrorType(''); // Clear the field to accept custom input
+    } else {
+      setIsCustomErrorType(false);
+    }
+  };
+
   const handleReject = async () => {
-    if (!selectedField && !errorType) {
-      setErrorMessage('Please select a field and type of error.');
+    // Validate inputs
+    if (!selectedField || selectedField.trim() === '') {
+      setErrorMessage('Please specify the field for rejection.');
       return;
     }
+
+    if (!errorType || errorType.trim() === '') {
+      setErrorMessage('Please specify the reason for rejection.');
+      return;
+    }
+
     setErrorMessage('');
 
     if (token) {
@@ -73,7 +152,7 @@ const CustomersView = () => {
         console.log('Token being used:', token);
 
         const res = await axios.post(
-          'http://54.152.49.191:8080/admin/decline/professional',
+          'https://rdrtech-api.atparui.com/admin/decline/professional',
           {
             professionalId: id,
             declinedFieldDTOs: [
@@ -114,6 +193,8 @@ const CustomersView = () => {
   const handleClosePopup = () => {
     setErrorType('');
     setSelectedField('');
+    setIsCustomField(false);
+    setIsCustomErrorType(false);
     setErrorMessage('');
     setShowRejectPopup(false);
   };
@@ -315,34 +396,82 @@ const CustomersView = () => {
               </div>
               <div className="reject-popup-fields">
                 <label>Select Field:</label>
-                <select
-                  value={selectedField}
-                  onChange={e => setSelectedField(e.target.value)}>
-                  <option value="">Select a field</option>
-                  <option value="gstNumber">GST Number</option>
-                  <option value="panNumber">PAN Card Number</option>
-                </select>
+                <div className="combobox-container">
+                  {!isCustomField ? (
+                    <select
+                      value={
+                        selectedField === '' && isCustomField
+                          ? 'others'
+                          : selectedField
+                      }
+                      onChange={handleFieldChange}
+                      className="combobox-select">
+                      {fieldOptions.map(option => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <div className="custom-input-container">
+                      <input
+                        ref={fieldInputRef}
+                        type="text"
+                        value={selectedField}
+                        onChange={e => setSelectedField(e.target.value)}
+                        placeholder="Specify field"
+                        className="combobox-input"
+                      />
+                      <button
+                        className="back-to-select-btn"
+                        onClick={() => {
+                          setIsCustomField(false);
+                          setSelectedField('');
+                        }}>
+                        <i className="fa fa-chevron-left"></i>
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 <label>Select Error Type:</label>
-                <select
-                  value={errorType}
-                  onChange={e => setErrorType(e.target.value)}
-                  className="error-type-select">
-                  <option value="">
-                    Please select the reason for rejection
-                  </option>
-                  <option value="incorrect_information">
-                    Information provided does not match with the uploaded
-                    documents
-                  </option>
-                  <option value="missing_information">
-                    Required documentation is incomplete or essential
-                    information is missing
-                  </option>
-                  <option value="invalid_details">
-                    Provided details are invalid, do not meet our verification
-                    standards
-                  </option>
-                </select>
+                <div className="combobox-container">
+                  {!isCustomErrorType ? (
+                    <select
+                      value={
+                        errorType === '' && isCustomErrorType
+                          ? 'others'
+                          : errorType
+                      }
+                      onChange={handleErrorTypeChange}
+                      className="combobox-select">
+                      {errorTypeOptions.map(option => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <div className="custom-input-container">
+                      <input
+                        ref={errorTypeInputRef}
+                        type="text"
+                        value={errorType}
+                        onChange={e => setErrorType(e.target.value)}
+                        placeholder="Specify reason for rejection"
+                        className="combobox-input"
+                      />
+                      <button
+                        className="back-to-select-btn"
+                        onClick={() => {
+                          setIsCustomErrorType(false);
+                          setErrorType('');
+                        }}>
+                        <i className="fa fa-chevron-left"></i>
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
               {errorMessage && <p className="error-message">{errorMessage}</p>}
               <div className="reject-popup-buttons">

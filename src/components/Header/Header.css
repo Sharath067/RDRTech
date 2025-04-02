@@ -11,6 +11,7 @@
 .projectTitle{
   cursor: pointer;
   margin-top: 3px;
+  color: black;
 }
 
 #header-logo {

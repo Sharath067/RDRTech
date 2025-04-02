@@ -26,7 +26,7 @@ const CreatingSubscriptionPlans = () => {
 
   // const formattedAmount = amount.toLocaleString();
   const predefinedPlans = {
-    FREE: {duration: 7, amount: 1},
+    FREE: {duration: 7, amount: 0},
     Premium: {duration: 1, amount: 999},
     Quarterly: {duration: 3, amount: 2999},
     Annual: {duration: 12, amount: 14999},
@@ -64,7 +64,7 @@ const CreatingSubscriptionPlans = () => {
 
   const validateField = (name, value) => {
     let error = '';
-    if (!value) {
+    if (value === '') {
       if (name !== 'isPlanActive') {
         error = 'Please enter the Account status';
       }
@@ -76,7 +76,8 @@ const CreatingSubscriptionPlans = () => {
       (name === 'planDuration' ||
         name === 'planAmount' ||
         name.startsWith('numberOf')) &&
-      isNaN(value)
+      isNaN(value) &&
+      name !== 'planAmount'
     ) {
       error = `${name
         .replace('plan', '')
@@ -141,6 +142,12 @@ const CreatingSubscriptionPlans = () => {
       return;
     }
 
+    // Prevent duplicate "FREE" plan creation
+    if (formData.planName === 'FREE') {
+      toast.error('Duplicate plans cannot be created.');
+      return;
+    }
+
     const postData = {
       name: formData.planName,
       description: formData.planDescription,
@@ -154,7 +161,25 @@ const CreatingSubscriptionPlans = () => {
 
     setLoading(true);
     setMessage('');
-    await submitPlan(postData);
+
+    // clearing the all the data after submitting the form
+    setFormData({
+      planName: '',
+      planDescription: '',
+      planDuration: '',
+      planAmount: '',
+      numberOfProjects: '',
+      numberOfEmployees: '',
+      numberOfClients: '',
+      isPlanActive: '',
+    });
+    try {
+      await submitPlan(postData);
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

@@ -27,7 +27,7 @@ const PendingUsers = () => {
       if (token) {
         try {
           const response = await fetch(
-            'http://54.152.49.191:8080/admin/professionals/subscriptionPending',
+            'https://rdrtech-api.atparui.com/admin/professionals/subscriptionPending',
             {
               headers: {
                 Authorization: `Bearer ${token}`,
