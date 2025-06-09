@@ -1,8 +1,6 @@
-import React from 'react';
 import {useNavigate} from 'react-router-dom';
-import {signOut} from 'firebase/auth';
 import './Header.css';
-import {auth} from '../../firebase';
+import TokenServices from '../../services/TokenServices';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -12,14 +10,27 @@ const Header = () => {
   };
 
   const logoutPage = () => {
-    signOut(auth)
-      .then(() => {
-        console.log('signout successful');
-        navigate('/');
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    try {
+      // Clear all authentication tokens from localStorage
+      localStorage.removeItem('jwtToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('accessTokenExpiry');
+      localStorage.removeItem('refreshTokenExpiry');
+
+      // Clear any token refresh timers if TokenServices has a cleanup method
+      if (TokenServices.clearTokenRefresh) {
+        TokenServices.clearTokenRefresh();
+      }
+
+      console.log('Logout successful');
+
+      // Navigate to login page
+      navigate('/login');
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Even if there's an error, still navigate to login
+      navigate('/login');
+    }
   };
 
   return (

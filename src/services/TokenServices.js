@@ -1,7 +1,7 @@
 // tokenService.js
 import axios from 'axios';
 
-const API_BASE_URL = 'https://rdrtech-api.atparui.com';
+const API_BASE_URL = 'http://107.21.143.103:8080';
 
 // Create axios instance
 const api = axios.create({

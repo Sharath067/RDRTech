@@ -15,32 +15,6 @@ const ActiveUser = () => {
   const [data, setData] = useState([]);
   const itemsPerPage = 5;
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const token = localStorage.getItem("jwtToken");
-  //     console.log("Token in the active users: ", token);
-  //     if (token) {
-  //       try {
-  //         const response = await fetch(
-  //           "https://rdrtech-api.atparui.com/admin/professionals/active",
-  //           {
-  //             headers: {
-  //               Authorization: `Bearer ${token}`,
-  //             },
-  //           }
-  //         );
-  //         const result = await response.json();
-  //         console.log("Fetched Result: ", result);
-  //         setData(result);
-  //       } catch (error) {
-  //         console.error("Error fetching data:", error);
-  //       }
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [token]);
-
   useEffect(() => {
     const loadActiveUsers = async () => {
       const token = localStorage.getItem('jwtToken');

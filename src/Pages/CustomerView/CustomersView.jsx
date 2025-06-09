@@ -59,7 +59,7 @@ const CustomersView = () => {
       if (token) {
         try {
           const response = await axios.get(
-            `https://rdrtech-api.atparui.com/admin/professional/${id}`,
+            `http://107.21.143.103:8080/admin/professional/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ const CustomersView = () => {
     if (token) {
       try {
         const res = await axios.post(
-          `https://rdrtech-api.atparui.com/admin/active/${id}`,
+          `http://107.21.143.103:8080/admin/active/${id}`,
           {},
           {
             headers: {
@@ -152,7 +152,7 @@ const CustomersView = () => {
         console.log('Token being used:', token);
 
         const res = await axios.post(
-          'https://rdrtech-api.atparui.com/admin/decline/professional',
+          'http://107.21.143.103:8080/admin/decline/professional',
           {
             professionalId: id,
             declinedFieldDTOs: [

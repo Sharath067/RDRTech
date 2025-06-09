@@ -23,7 +23,7 @@ const CouponList = () => {
       if (token) {
         try {
           const response = await axios.get(
-            'https://rdrtech-api.atparui.com/coupon/admin/getAllCoupons',
+            'http://107.21.143.103:8080/admin/coupon/getAll',
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -68,7 +68,7 @@ const CouponList = () => {
   };
 
   const handleEditClick = coupon => {
-    setEditingCoupon({...coupon});
+    setEditingCoupon({...coupon, expireDate: coupon.valid});
     setIsModalOpen(true);
   };
 
@@ -83,8 +83,8 @@ const CouponList = () => {
     if (!editingCoupon?.code) errors.code = 'Coupon code is required.';
     if (!editingCoupon?.description)
       errors.description = 'Description is required.';
-    if (!editingCoupon?.rupees || isNaN(editingCoupon.rupees))
-      errors.rupees = 'Rupees must be a valid number.';
+    if (!editingCoupon?.discount || isNaN(editingCoupon.discount))
+      errors.discount = 'Rupees must be a valid number.';
     if (!editingCoupon?.expireDate)
       errors.expireDate = 'Expire date is required.';
     if (editingCoupon?.isActive === undefined)
@@ -102,7 +102,7 @@ const CouponList = () => {
 
     try {
       const response = await axios.put(
-        'https://rdrtech-api.atparui.com/coupon/save',
+        'http://107.21.143.103:8080/admin/coupon/save',
         editingCoupon,
         {
           headers: {
@@ -147,19 +147,21 @@ const CouponList = () => {
             <div key={coupon.id} className="coupon-card">
               <div className="coupon-content">
                 <div className="coupon-details">
-                  <h2 className="coupon-discount">{coupon.description}</h2>
-                  <p className="coupon-description">
-                    <span className="label-bold">&#8377; {coupon.rupees}</span>
-                  </p>
-                  <span className="coupon-code">Code: {coupon.code}</span>
+                  <span className="coupon-description">
+                    <p>
+                      <span className="label-bold">Discount :</span>{' '}
+                      {coupon.discount} %
+                    </p>
+                  </span>
+                  <span className="coupon-code">Code : {coupon.code}</span>
                 </div>
                 <div className="coupon-expiry">
                   <p>
-                    <span className="label-bold">Expires on:</span>{' '}
-                    {coupon.expireDate}
+                    <span className="label-bold">Expires on :</span>{' '}
+                    {coupon.valid}
                   </p>
                   <p>
-                    <span className="label-bold">Status:</span>{' '}
+                    <span className="label-bold">Status :</span>{' '}
                     {coupon.isActive ? 'Active' : 'Inactive'}
                   </p>
                 </div>
@@ -253,38 +255,16 @@ const CouponList = () => {
                         )}
                       </div>
                       <div className="mb-2">
-                        <label className="form-label">Description :</label>
-                        <input
-                          type="text"
-                          name="description"
-                          placeholder="Enter description"
-                          value={editingCoupon?.description || ''}
-                          onChange={e =>
-                            setEditingCoupon({
-                              ...editingCoupon,
-                              description: e.target.value,
-                            })
-                          }
-                          required
-                          className="form-control"
-                        />
-                        {errors.description && (
-                          <small className="text-danger">
-                            {errors.description}
-                          </small>
-                        )}
-                      </div>
-                      <div className="mb-2">
                         <label className="form-label">Rupees :</label>
                         <input
                           type="number"
                           name="rupees"
                           placeholder="Enter rupees"
-                          value={editingCoupon?.rupees || ''}
+                          value={editingCoupon?.discount || ''}
                           onChange={e =>
                             setEditingCoupon({
                               ...editingCoupon,
-                              rupees: e.target.value,
+                              discount: e.target.value,
                             })
                           }
                           required

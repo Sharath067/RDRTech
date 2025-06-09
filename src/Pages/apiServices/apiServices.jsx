@@ -118,7 +118,7 @@ export const fetchProfessionals = async () => {
 
 export const createCoupon = async postData => {
   try {
-    const response = await axiosInstance.post('/coupon/save', postData);
+    const response = await axiosInstance.post('/admin/coupon/save', postData);
     return response.data;
   } catch (error) {
     console.error('Error creating coupon:', error);
@@ -128,24 +128,10 @@ export const createCoupon = async postData => {
 
 export const getAllCoupons = async () => {
   try {
-    const response = await axiosInstance.get('/coupon/admin/getAllCoupons');
+    const response = await axiosInstance.get('/coupon/admin/getAll');
     return response.data;
   } catch (error) {
     console.error('Error fetching all coupons:', error);
-    throw error;
-  }
-};
-
-export const updateCoupon = async couponData => {
-  try {
-    const response = await axiosInstance.post('/coupon/save', couponData, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error updating coupon:', error);
     throw error;
   }
 };
@@ -187,7 +173,7 @@ export const getAllPlans = async () => {
     );
     return response.data;
   } catch (error) {
-    console.error('Error fetching plans:', error);
+    console.error('Error fetching plans:', error.status);
     throw error;
   }
 };
