@@ -1,16 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-// import { useAuth } from "../AuthContexts/AuthContext";
 import {toast, ToastContainer} from 'react-toastify';
 import couponService from './coupon.service';
 import './Couponstable.css';
 
-const CouponList = () => {
-  // const { token } = useAuth();
+const CouponList = ({coupons, setCoupons}) => {
+  // Accept coupons and setCoupons as props
   const [searchItem, setSearchItem] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-  const [couponData, setCouponData] = useState([]);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState(null);
@@ -18,19 +16,20 @@ const CouponList = () => {
 
   const token = localStorage.getItem('jwtToken');
 
+  // Initial fetch on component mount
   useEffect(() => {
     const fetchCoupons = async () => {
-      if (token) {
+      if (token && coupons.length === 0) {
         try {
           const response = await axios.get(
-            'http://107.21.143.103:8080/admin/coupon/getAll',
+            'http://100.24.7.142:8080/admin/coupon/getAll',
             {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             },
           );
-          setCouponData(response.data);
+          setCoupons(response.data);
           couponService.updateCoupons(response.data);
           console.log('Get all the user coupons: ', response.data);
         } catch (err) {
@@ -40,14 +39,9 @@ const CouponList = () => {
     };
 
     fetchCoupons();
-  }, [token]);
+  }, [token, coupons.length, setCoupons]);
 
-  useEffect(() => {
-    const subscription = couponService.getCoupons().subscribe(setCouponData);
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const filterData = couponData.filter(item => {
+  const filterData = coupons.filter(item => {
     return (
       (item.description &&
         item.description.toLowerCase().includes(searchItem.toLowerCase())) ||
@@ -68,7 +62,10 @@ const CouponList = () => {
   };
 
   const handleEditClick = coupon => {
-    setEditingCoupon({...coupon, expireDate: coupon.valid});
+    setEditingCoupon({
+      ...coupon,
+      expireDate: coupon.valid || coupon.expireDate,
+    });
     setIsModalOpen(true);
   };
 
@@ -81,10 +78,8 @@ const CouponList = () => {
   const validateForm = () => {
     const errors = {};
     if (!editingCoupon?.code) errors.code = 'Coupon code is required.';
-    if (!editingCoupon?.description)
-      errors.description = 'Description is required.';
     if (!editingCoupon?.discount || isNaN(editingCoupon.discount))
-      errors.discount = 'Rupees must be a valid number.';
+      errors.discount = 'Discount must be a valid number.';
     if (!editingCoupon?.expireDate)
       errors.expireDate = 'Expire date is required.';
     if (editingCoupon?.isActive === undefined)
@@ -102,7 +97,7 @@ const CouponList = () => {
 
     try {
       const response = await axios.put(
-        'http://107.21.143.103:8080/admin/coupon/save',
+        'http://100.24.7.142:8080/admin/coupon/save',
         editingCoupon,
         {
           headers: {
@@ -111,11 +106,14 @@ const CouponList = () => {
           },
         },
       );
-      setCouponData(prevData =>
+
+      // Update the coupons in parent component
+      setCoupons(prevData =>
         prevData.map(coupon =>
           coupon.id === response.data.id ? response.data : coupon,
         ),
       );
+
       toast.success('Coupon updated successfully!');
       handleModalClose();
     } catch (err) {
@@ -158,7 +156,7 @@ const CouponList = () => {
                 <div className="coupon-expiry">
                   <p>
                     <span className="label-bold">Expires on :</span>{' '}
-                    {coupon.valid}
+                    {coupon.valid || coupon.expireDate}
                   </p>
                   <p>
                     <span className="label-bold">Status :</span>{' '}
@@ -166,13 +164,14 @@ const CouponList = () => {
                   </p>
                 </div>
               </div>
-              <div className="coupon-actions">
+              {/* <div className="coupon-actions">
                 <i
                   className="fa fa-pencil-square-o"
                   aria-hidden="true"
-                  onClick={() => handleEditClick(coupon)}></i>
+                  onClick={() => handleEditClick(coupon)}
+                  style={{cursor: 'pointer'}}></i>
                 <div className="tooltip">Edit Coupon</div>
-              </div>
+              </div> */}
             </div>
           ))}
         </section>
@@ -233,7 +232,6 @@ const CouponList = () => {
                   </div>
                   <div className="modal-body">
                     <form onSubmit={handleSubmit}>
-                      {/* Form fields */}
                       <div className="mb-2">
                         <label className="form-label">Code :</label>
                         <input
@@ -255,11 +253,11 @@ const CouponList = () => {
                         )}
                       </div>
                       <div className="mb-2">
-                        <label className="form-label">Rupees :</label>
+                        <label className="form-label">Discount (%) :</label>
                         <input
                           type="number"
-                          name="rupees"
-                          placeholder="Enter rupees"
+                          name="discount"
+                          placeholder="Enter discount percentage"
                           value={editingCoupon?.discount || ''}
                           onChange={e =>
                             setEditingCoupon({
@@ -270,8 +268,10 @@ const CouponList = () => {
                           required
                           className="form-control"
                         />
-                        {errors.rupees && (
-                          <small className="text-danger">{errors.rupees}</small>
+                        {errors.discount && (
+                          <small className="text-danger">
+                            {errors.discount}
+                          </small>
                         )}
                       </div>
                       <div className="mb-2">
@@ -296,13 +296,13 @@ const CouponList = () => {
                         )}
                       </div>
                       <div className="mb-2">
-                        <label className="form-label"> Coupon status :</label>
+                        <label className="form-label">Coupon status :</label>
                         <div className="custom-select-wrapper">
                           <select
                             name="isActive"
                             value={
                               editingCoupon?.isActive !== undefined
-                                ? editingCoupon.isActive
+                                ? editingCoupon.isActive.toString()
                                 : ''
                             }
                             onChange={e =>
@@ -319,7 +319,6 @@ const CouponList = () => {
                             <option value="true">Active</option>
                             <option value="false">Inactive</option>
                           </select>
-
                           {errors.isActive && (
                             <small className="text-danger">
                               {errors.isActive}

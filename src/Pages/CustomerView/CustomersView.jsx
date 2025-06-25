@@ -59,7 +59,7 @@ const CustomersView = () => {
       if (token) {
         try {
           const response = await axios.get(
-            `http://107.21.143.103:8080/admin/professional/${id}`,
+            `http://100.24.7.142:8080/admin/professional/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ const CustomersView = () => {
     if (token) {
       try {
         const res = await axios.post(
-          `http://107.21.143.103:8080/admin/active/${id}`,
+          `http://100.24.7.142:8080/admin/active/${id}`,
           {},
           {
             headers: {
@@ -152,7 +152,7 @@ const CustomersView = () => {
         console.log('Token being used:', token);
 
         const res = await axios.post(
-          'http://107.21.143.103:8080/admin/decline/professional',
+          'http://100.24.7.142:8080/admin/decline/professional',
           {
             professionalId: id,
             declinedFieldDTOs: [
@@ -268,19 +268,13 @@ const CustomersView = () => {
                   <label>{professional?.companyName}</label>
                 </div>
                 <div>
-                  <label className="labels-for-details">Business Email</label>{' '}
+                  <label className="labels-for-details">GST Number</label>{' '}
                   <br />
-                  <label>{professional?.companyEmail}</label>
+                  <label>{professional?.gstNumber || 'N/A'}</label>
                 </div>
                 <div>
-                  <label className="labels-for-details">Company Website</label>{' '}
-                  <br />
-                  <label>{professional?.websiteLink || 'N/A'}</label>
-                </div>
-                <div>
-                  <label className="labels-for-details">Social Media</label>{' '}
-                  <br />
-                  <label>{professional?.socialMediaLink || 'N/A'}</label>
+                  <label className="labels-for-details">PAN Card</label> <br />
+                  <label>{professional?.panNumber || 'N/A'}</label>
                 </div>
               </div>
             </section>
@@ -310,25 +304,6 @@ const CustomersView = () => {
             </section>
             <section className="company-details-section-main">
               <h4 className="company-details-section-heading">
-                GST / PAN card Details
-              </h4>
-              <div className="company-details-section-1">
-                <div>
-                  <label className="labels-for-details">GST Number</label>{' '}
-                  <br />
-                  <label>{professional?.gstNumber || 'N/A'}</label>
-                </div>
-                <div>
-                  <label className="labels-for-details">PAN Card</label> <br />
-                  <label>{professional?.panNumber || 'N/A'}</label>
-                </div>
-              </div>
-            </section>
-          </div>
-
-          <div className="documents-section">
-            <section className="company-details-section-main">
-              <h4 className="company-details-section-heading">
                 GST / PAN card Documents
               </h4>
               <div className="company-details-section-1">
@@ -339,7 +314,6 @@ const CustomersView = () => {
                       href={professional.gstFormS3SignedURL}
                       onClick={handleGstDownload}>
                       <i className="fa fa-file-pdf-o fa-5x"></i>
-                      {/* <img src="../../Assets/Images/pdf.png" alt="" height={'80px'} width={'80px'} /> */}
                     </a>
                   ) : (
                     <p>
@@ -365,16 +339,19 @@ const CustomersView = () => {
                 </div>
               </div>
             </section>
+          </div>
+
+          <div className="documents-section">
             <section className="company-details-section-main-buttons">
               {professional.accountStatus === 'Pending' && (
                 <div className="approve-button-section">
-                  <button className="approve-button" onClick={handleApprove}>
-                    Approve
-                  </button>
                   <button
                     className="reject-button"
                     onClick={() => setShowRejectPopup(true)}>
                     Reject
+                  </button>
+                  <button className="approve-button" onClick={handleApprove}>
+                    Approve
                   </button>
                 </div>
               )}
