@@ -59,7 +59,7 @@ const CustomersView = () => {
       if (token) {
         try {
           const response = await axios.get(
-            `http://100.24.7.142:8080/admin/professional/${id}`,
+            `http://54.221.22.62:8080/admin/professional/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ const CustomersView = () => {
     if (token) {
       try {
         const res = await axios.post(
-          `http://100.24.7.142:8080/admin/active/${id}`,
+          `http://54.221.22.62:8080/admin/active/${id}`,
           {},
           {
             headers: {
@@ -152,7 +152,7 @@ const CustomersView = () => {
         console.log('Token being used:', token);
 
         const res = await axios.post(
-          'http://100.24.7.142:8080/admin/decline/professional',
+          'http://54.221.22.62:8080/admin/decline/professional',
           {
             professionalId: id,
             declinedFieldDTOs: [

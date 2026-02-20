@@ -1,11 +1,12 @@
 import axios from 'axios';
 // import { useNavigate } from 'react-router-dom';
 
-const BASE_URL = 'http://100.24.7.142:8080';
+const BASE_URL = 'http://54.221.22.62:8080';
 
 // Create an Axios instance
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
+  withCredentials: true,
 });
 
 // Axios interceptor to handle 401 errors

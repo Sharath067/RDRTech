@@ -6,13 +6,19 @@ import {fetchPieChartData} from '../apiServices/apiServices';
 
 const UserPieChart = () => {
   const {token} = useAuth();
-
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [userData, setUserData] = useState({
     activeUsers: 0,
     accountApprovalPendingUsers: 0,
     subscriptionPendingUsers: 0,
     subscriptionExpiredUsers: 0,
   });
+  // Responsive: track window width
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -84,18 +90,22 @@ const UserPieChart = () => {
     plugins: {
       legend: {
         display: true,
-        position: 'right',
+        position: windowWidth <= 450 ? 'bottom' : 'right', // ← only bottom for mobile
+        labels: {
+          boxWidth: 10,
+          font: {
+            size: 12,
+          },
+        },
       },
       datalabels: {
         color: '#fff',
         formatter: (value, context) => {
-          let sum = 0;
-          let dataArr = context.chart.data.datasets[0].data;
-          dataArr.forEach(data => {
-            sum += data;
-          });
-          let percentage = ((value * 100) / sum).toFixed(2) + '%';
-          return percentage;
+          const sum = context.chart.data.datasets[0].data.reduce(
+            (a, b) => a + b,
+            0,
+          );
+          return ((value * 100) / sum).toFixed(2) + '%';
         },
         font: {
           weight: 'bold',
@@ -103,11 +113,22 @@ const UserPieChart = () => {
       },
     },
   };
-
+  let chartStyle = {width: '100%', height: '450px'};
+  if (windowWidth <= 425) {
+    chartStyle = {width: '90%', height: '0px'};
+  } else if (windowWidth <= 800) {
+    chartStyle = {width: '100%', height: '320px'};
+  }
   return (
     <div>
       <h2>User Distribution</h2>
-      <div style={{width: '92%', height: '50%', display: 'flex'}}>
+      <div
+        style={{
+          ...chartStyle,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
         <Pie data={data} options={options} />
       </div>
     </div>

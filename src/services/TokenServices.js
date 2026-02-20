@@ -1,7 +1,8 @@
 // tokenService.js
 import axios from 'axios';
 
-const API_BASE_URL = 'http://100.24.7.142:8080';
+const API_BASE_URL = 'http://54.221.22.62:8080';
+// 100.24.7.142
 
 // Create axios instance
 const api = axios.create({

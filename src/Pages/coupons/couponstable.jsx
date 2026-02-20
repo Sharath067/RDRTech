@@ -22,7 +22,7 @@ const CouponList = ({coupons, setCoupons}) => {
       if (token && coupons.length === 0) {
         try {
           const response = await axios.get(
-            'http://100.24.7.142:8080/admin/coupon/getAll',
+            'http://54.221.22.62:8080/admin/coupon/getAll',
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -97,7 +97,7 @@ const CouponList = ({coupons, setCoupons}) => {
 
     try {
       const response = await axios.put(
-        'http://100.24.7.142:8080/admin/coupon/save',
+        'http://54.221.22.62:8080/admin/coupon/save',
         editingCoupon,
         {
           headers: {

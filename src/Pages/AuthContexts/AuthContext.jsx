@@ -25,7 +25,7 @@ export const AuthProvider = ({children}) => {
           // Get JWT token from backend using Firebase token
           try {
             const response = await axios.post(
-              'http://100.24.7.142:8080/auth/authenticate',
+              'http://54.221.22.62:8080/auth/authenticate',
               {
                 firebaseToken: token, // Send Firebase token to backend
               },
@@ -55,7 +55,7 @@ export const AuthProvider = ({children}) => {
   const login = async (username, password) => {
     try {
       const response = await axios.post(
-        'http://100.24.7.142:8080/auth/authenticate',
+        'http://54.221.22.62:8080/auth/authenticate',
         {
           username,
           password,

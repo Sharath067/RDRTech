@@ -139,8 +139,8 @@ button {
       height: auto;
     }
     .barchart-section canvas {
-      margin-left: -100px;
-        width: 45% !important;
+      /* margin-left: -100px; */
+        width: 50% !important;
         height: 70% !important;
     }
     .piechart-section h2{

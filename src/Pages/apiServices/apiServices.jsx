@@ -196,3 +196,29 @@ export const updatePlan = async (token, postData) => {
     throw error;
   }
 };
+
+// Fetch Monthly Subscription Stats
+export const fetchMonthlySubscriptionStats = async year => {
+  try {
+    const response = await axiosInstance.get(
+      `/admin/monthly-subscription-stats?year=${year}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching monthly subscription stats:', error);
+    throw error;
+  }
+};
+
+// Fetch Daily Subscription Stats
+export const fetchDailySubscriptionStats = async (year, month) => {
+  try {
+    const response = await axiosInstance.get(
+      `/admin/daily-subscription-stats?year=${year}&month=${month}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching daily subscription stats:', error);
+    throw error;
+  }
+};

@@ -97,7 +97,7 @@ const SignUp = () => {
 
     try {
       const response = await axios.post(
-        'http://100.24.7.142:8080/auth/signup',
+        'http://54.221.22.62:8080/auth/signup',
         {
           username: formData.username,
           name: formData.name,

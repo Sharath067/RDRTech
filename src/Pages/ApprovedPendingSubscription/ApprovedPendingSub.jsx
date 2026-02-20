@@ -27,7 +27,7 @@ const PendingUsers = () => {
       if (token) {
         try {
           const response = await fetch(
-            'http://100.24.7.142:8080/admin/professionals/subscriptionPending',
+            'http://54.221.22.62:8080/admin/professionals/subscriptionPending',
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -128,7 +128,7 @@ const PendingUsers = () => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        'http://100.24.7.142:8080/api/email/notifyAllSubscriptionPendingUsers',
+        'http://54.221.22.62:8080/api/email/notifyAllSubscriptionPendingUsers',
         {
           method: 'POST',
           headers: {

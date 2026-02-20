@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   // FaTh,
   FaBars,
@@ -16,6 +16,29 @@ import subscription from '../../Assets/Images/subscription.png';
 const Sidebar = ({children}) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  const sidebarRef = useRef(null);
+  // Close on outside click (mobile only)
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        window.innerWidth <= 768 && // mobile condition
+        isOpen
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
+
+  const handleMenuClick = () => {
+    if (window.innerWidth <= 768) {
+      setIsOpen(false);
+    }
+  };
   const menuItem = [
     {
       path: 'dashboard',
@@ -67,7 +90,8 @@ const Sidebar = ({children}) => {
             to={item.path}
             key={index}
             className="link"
-            activeclassname="active">
+            activeclassname="active"
+            onClick={handleMenuClick}>
             <div className="icon">{item.icon}</div>
             <div
               style={{display: isOpen ? 'block' : 'none'}}
